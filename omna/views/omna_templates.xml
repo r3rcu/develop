@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="assets_backend" name="mail assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <!-- systray -->
+                <script type="text/javascript" src="/omna/static/src/js/omna_sign_in.js"></script>
+                <script type="text/javascript" src="/omna/static/src/js/systray_tenant_menu.js"></script>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

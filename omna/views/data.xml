@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="menu_omna_data" name="Data" parent="menu_omna_integration" sequence="1"/>
+
+        <record id="omna_view_sales_order_filter_inherit" model="ir.ui.view">
+            <field name="name">omna.sale.order.list.select.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="mode">primary</field>
+            <field name="priority">8</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
+                    <filter name="current_tenant" string="Current Tenant"
+                            domain="[('omna_tenant_id', '=', context.get('omna_current_tenant'))]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Order Menu and Views -->
+        <record id="action_omna_orders" model="ir.actions.act_window">
+            <field name="name">Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <!--            <field name="view_type">form</field>-->
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="context">{'search_default_current_tenant': 1}</field>
+            <field name="domain">[]</field>
+<!--            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new quotation, the first step of a new sale!
+                </p>
+                <p>
+                    Once the quotation is confirmed, it becomes a sales order.
+                    <br/>
+                    You will be able to create an invoice and collect the payment.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_omna_orders" name="Orders" parent="menu_omna_data" sequence="0"
+                  action="action_omna_orders"/>
+        <!-- End Order -->
+
+        <!--         Product Menu and Views-->
+        <record id="omna_product_template_form_view" model="ir.ui.view">
+            <field name="name">omna.product.template.product.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options']" position="inside">
+                    <div>
+                        <field name="no_create_variants"/>
+                        <label for="no_create_variants"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="omna_product_template_search_view_inherit" model="ir.ui.view">
+            <field name="name">omna.product.template.search.inherit</field>
+            <field name="model">product.template</field>
+            <field name="mode">primary</field>
+            <field name="priority">8</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='services']" position="before">
+                    <filter name="current_tenant" string="Current Tenant"
+                            domain="[('omna_tenant_id', '=', context.get('omna_current_tenant'))]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_omna_products" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <!--            <field name="view_type">form</field>-->
+            <field name="view_mode">kanban,tree,form,activity</field>
+            <field name="context">{"search_default_filter_to_sell":1, "sale_multi_pricelist_product_template": 1,
+                "search_default_current_tenant": 1}
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new product
+                </p>
+                <p>
+                    You must define a product for everything you purchase,
+                    whether it's a physical product, a consumable or services.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_omna_products" name="Products" parent="menu_omna_data" sequence="1"
+                  action="action_omna_products"/>
+
+        <record id="omna_product_search_form_view" model="ir.ui.view">
+            <field name="name">omna.product.product.search</field>
+            <field name="model">product.product</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='services']" position="before">
+                    <filter name="current_tenant" string="Current Tenant"
+                            domain="[('omna_tenant_id', '=', context.get('omna_current_tenant'))]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_omna_products_variants" model="ir.actions.act_window">
+            <field name="name">Products Variants</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <!--            <field name="view_type">form</field>-->
+            <field name="view_mode">kanban,tree,form,activity</field>
+            <field name="context">{"search_default_filter_to_sell":1, "sale_multi_pricelist_product_template": 1,
+                "search_default_current_tenant": 1}
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new product variant
+                </p>
+                <p>
+                    You must define a product for everything you purchase,
+                    whether it's a physical product, a consumable or services.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_omna_products_variants" name="Products Variants" parent="menu_omna_data" sequence="1"
+                  action="action_omna_products_variants"/>
+        <!-- End Product -->
+
+    </data>
+</odoo>
