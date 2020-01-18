@@ -2,11 +2,26 @@
 {
     'name': "OMNA for Odoo",
 
-    'summary': """Odoo, Cenit, OMNA API, Automate Multichannel Selling""",
+    'summary': """Automate Multichannel Selling, OMNA API""",
 
     'description': """
-        Manage multiple sales channel efficiently. Integrated with leading e-commerce marketplaces 
-        such as Lazada, Shopee and more.
+        Manage multiple sales channel efficiently. Integrated with online marketplaces for product 
+        listing, order consolidation, and inventory sync.
+
+        Supported Integrations:
+            - Shopify
+            - Shopee
+            - Lazada
+            - Qoo10
+            - MercadoLibre
+            - Backmarket
+            - Shipstation
+
+        The OMNA Commerce API is simple connector API to integrate ecommerce sale channels, such us marketplaces and ecommerce platforms.
+
+        An easy way to get orders, synchronize inventory and list product information to commerce solutions around the globe.
+
+        It is built on top of an integration platform Cenit IO (https://cenit.io)
     """,
 
     'author': "OMNA Pte Ltd",
