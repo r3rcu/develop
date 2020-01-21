@@ -13,7 +13,6 @@ class OmnaSyncWorkflows(models.TransientModel):
     _name = 'omna.sync_workflows_wizard'
     _inherit = 'omna.api'
 
-
     def sync_workflows(self):
         try:
             limit = 100

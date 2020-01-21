@@ -133,7 +133,6 @@ class OmnaApi(models.AbstractModel):
     @api.model
     def get_config(self):
         icp = self.env['ir.config_parameter']
-        # tenant = self.env['omna.tenant'].search([('current', '=', True)], limit=1)
         tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
         config = {
             'omna_api_url': icp.sudo().get_param(

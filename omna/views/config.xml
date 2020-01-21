@@ -19,9 +19,6 @@
                         <group string="Connection settings">
                             <field name="cenit_url"
                                    placeholder="Omna API url (Default: 'https://cenit.io/app/ecapi_v1')"/>
-<!--                            <field name="cenit_user_key" placeholder="Your Cenit's user key"/>-->
-<!--                            <field name="cenit_user_secret" placeholder="Your Cenit's user secret"/>-->
-<!--                            <field name="cenit_user_token" placeholder="Your Cenit's user token" password="True"/>-->
                         </group>
                     </div>
                 </form>
@@ -67,9 +64,6 @@
                     </p>
                     <group>
                         <field name="cenit_url" placeholder="Omna API url (Default: 'https://cenit.io/app/ecapi_v1')"/>
-<!--                        <field name="cenit_user_key" placeholder="Your Cenit's user key"/>-->
-<!--                        <field name="cenit_user_secret" placeholder="Your Cenit's user secret"/>-->
-<!--                        <field name="cenit_user_token" placeholder="Your Cenit's user token" password="True"/>-->
                     </group>
                 </separator>
             </field>
@@ -164,7 +158,6 @@
         <record id="todo_wizard_omna_install" model="ir.actions.todo">
             <field name="action_id" ref="action_wizard_omna_sign_in_install"/>
             <field name="sequence">0</field>
-<!--            <field name="type">automatic</field>-->
         </record>
     </data>
 </odoo>

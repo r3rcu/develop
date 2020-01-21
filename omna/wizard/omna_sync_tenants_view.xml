@@ -23,7 +23,6 @@
         <record id="action_sync_tenants_wizard" model="ir.actions.act_window">
             <field name="name">Sync Tenants</field>
             <field name="res_model">omna.sync_tenants_wizard</field>
-<!--            <field name="view_type">form</field>-->
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_sync_tenants_wizard"/>
             <field name="target">new</field>

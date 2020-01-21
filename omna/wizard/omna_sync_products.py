@@ -17,7 +17,6 @@ class OmnaSyncProducts(models.TransientModel):
     _name = 'omna.sync_products_wizard'
     _inherit = 'omna.api'
 
-    # @api.multi
     def sync_products(self):
         try:
             self.import_products()

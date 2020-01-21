@@ -4,7 +4,6 @@ import odoo
 import datetime
 from odoo import models, fields, api, exceptions
 from odoo.exceptions import UserError
-# from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 import dateutil.parser
 import pytz
 
@@ -33,7 +32,6 @@ class OmnaIntegration(models.Model):
 
     @api.model
     def _current_tenant(self):
-        # current_tenant = self.env['omna.tenant'].search([('current', '=', True)], limit=1)
         current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
         if current_tenant:
             return current_tenant.id
@@ -88,7 +86,6 @@ class OmnaWebhook(models.Model):
 
     @api.model
     def _current_tenant(self):
-        # current_tenant = self.env['omna.tenant'].search([('current', '=', True)], limit=1)
         current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
         if current_tenant:
             return current_tenant.id
@@ -166,7 +163,6 @@ class OmnaFlow(models.Model):
 
     @api.model
     def _current_tenant(self):
-        # current_tenant = self.env['omna.tenant'].search([('current', '=', True)], limit=1)
         current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
         if current_tenant:
             return current_tenant.id
@@ -283,7 +279,6 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _current_tenant(self):
-        # current_tenant = self.env['omna.tenant'].search([('current', '=', True)], limit=1)
         current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
         if current_tenant:
             return current_tenant.id
@@ -360,6 +355,7 @@ class ProductProduct(models.Model):
     variant_integration_ids = fields.Many2many('omna.integration', 'omna_product_integration_rel', 'product_id',
                                                'integration_id', 'Integrations')
 
+    # TODO Post variant to OMNA when functionality is available
     # @api.model
     # def create(self, vals_list):
     #     if not self._context.get('synchronizing'):
@@ -423,7 +419,6 @@ class SaleOrder(models.Model):
 
     @api.model
     def _current_tenant(self):
-        # current_tenant = self.env['omna.tenant'].search([('current', '=', True)], limit=1)
         current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
         if current_tenant:
             return current_tenant.id
@@ -434,7 +429,6 @@ class SaleOrder(models.Model):
     omna_id = fields.Char("OMNA Order ID", index=True)
     integration_id = fields.Many2one('omna.integration', 'OMNA Integration')
 
-    # @api.multi
     def action_cancel(self):
         orders = self.filtered(lambda order: not order.origin == 'OMNA')
         if orders:
@@ -478,7 +472,6 @@ class OmnaTask(models.Model):
     task_execution_ids = fields.One2many('omna.task.execution', 'task_id', 'Executions')
     task_notification_ids = fields.One2many('omna.task.notification', 'task_id', 'Notifications')
 
-    # @api.multi
     def read(self, fields_read=None, load='_classic_read'):
         result = []
         tzinfos = {
@@ -548,7 +541,6 @@ class OmnaTask(models.Model):
         params = {
             'limit': limit,
             'offset': offset,
-            # 'with_details': 1
         }
         for term in domain:
             if term[0] == 'description':
@@ -656,10 +648,6 @@ class OmnaTenant(models.Model):
     @api.model
     def _switch(self):
         self.ensure_one()
-        # current = self.env['omna.tenant'].search([('current', '=', True)])
-        # if current:
-        #     current.write({'current': False})
-        # self.write({'current': True})
         self.env.user.context_omna_current_tenant = self.id
         return True
 

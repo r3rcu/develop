@@ -36,7 +36,6 @@
                             <field name="days_of_week" widget="many2many_tags" options="{'no_create_edit':'1'}"/>
                             <field name="weeks_of_month" widget="many2many_tags" options="{'no_create_edit':'1'}"/>
                             <field name="months_of_year" widget="many2many_tags" options="{'no_create_edit':'1'}"/>
-                            <!--<field name="active"/>-->
                         </group>
                     </sheet>
                 </form>
@@ -59,7 +58,6 @@
             <field name="name">Workflows</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">omna.flow</field>
-            <!--            <field name="view_type">form</field>-->
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_current_tenant': 1}</field>
         </record>

@@ -18,15 +18,13 @@
             </field>
         </record>
 
-<!--        <act_window id="action_omna_workflows_start"-->
-<!--            multi="True"-->
-<!--            key2="client_action_multi"-->
-<!--            name="Start Flow"-->
-<!--            res_model="omna.action_start_workflows_wizard"-->
-<!--            src_model="omna.flow"-->
-<!--            view_mode="form"-->
-<!--            target="new"-->
-<!--            view_type="form" />-->
+        <record model="ir.actions.act_window" id="action_omna_workflows_start">
+            <field name="binding_model_id" ref="omna.model_omna_flow"/>
+            <field name="name">Start Flow</field>
+            <field name="res_model">omna.action_start_workflows_wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
     </data>
 </odoo>

@@ -12,7 +12,6 @@ class OmnaSyncWorkflows(models.TransientModel):
     _name = 'omna.action_status_workflows_wizard'
     _inherit = 'omna.api'
 
-    # @api.multi
     def start(self):
         context = dict(self._context or {})
         active_ids = context.get('active_ids', []) or []

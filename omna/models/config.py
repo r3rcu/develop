@@ -37,9 +37,6 @@ class OmnaSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     cenit_url = fields.Char('Cenit URL')
-    # cenit_user_key = fields.Char('Cenit User key', required=True)
-    # cenit_user_secret = fields.Char('Cenit User secret', required=True)
-    # cenit_user_token = fields.Char('Cenit User token', required=True)
 
 
     ############################################################################
@@ -50,9 +47,6 @@ class OmnaSettings(models.TransientModel):
         res = super(OmnaSettings, self).get_values()
         res.update(
             cenit_url=self.env["ir.config_parameter"].sudo().get_param("omna_odoo.cenit_url", default=None),
-            # cenit_user_key=self.env["ir.config_parameter"].sudo().get_param("omna_odoo.cenit_user_key", default=None),
-            # cenit_user_secret=self.env["ir.config_parameter"].sudo().get_param("omna_odoo.cenit_user_secret", default=None),
-            # cenit_user_token=self.env["ir.config_parameter"].sudo().get_param("omna_odoo.cenit_user_token", default=None)
         )
         return res
 
@@ -64,16 +58,6 @@ class OmnaSettings(models.TransientModel):
         super(OmnaSettings, self).set_values()
         for record in self:
             self.env['ir.config_parameter'].sudo().set_param("omna_odoo.cenit_url", record.cenit_url or '')
-            # self.env['ir.config_parameter'].sudo().set_param("omna_odoo.cenit_user_key", record.cenit_user_key or '')
-            # self.env['ir.config_parameter'].sudo().set_param("omna_odoo.cenit_user_secret", record.cenit_user_secret or '')
-            # self.env['ir.config_parameter'].sudo().set_param("omna_odoo.cenit_user_token",
-            #                                                  record.cenit_user_token or '')
-
-    # def execute(self):
-    #     prev = self.get_values()
-    #
-    #     rc = super(OmnaSettings, self).execute()
-    #     return rc
 
 
 class OnmaSignInSettings(models.TransientModel):

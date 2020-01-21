@@ -53,5 +53,3 @@ class Omna(http.Controller):
             return True
 
         return False
-        # action = request.env.ref('omna.action_omna_orders').read()[0]
-        # return werkzeug.utils.redirect('/web#action=%s' % action['id'] or '', 301)

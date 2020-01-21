@@ -17,7 +17,6 @@ class OmnaSyncIntegrations(models.TransientModel):
     _name = 'omna.sync_integrations_wizard'
     _inherit = 'omna.api'
 
-    # @api.multi
     def sync_integrations(self):
         try:
             response = self.get('integrations', {})
