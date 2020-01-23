@@ -17,7 +17,7 @@ def omna_id2real_id(omna_id):
 
 class OmnaIntegration(models.Model):
     _name = 'omna.integration'
-    _inherit = 'omna.api'
+    _inherit = ['omna.api', 'image.mixin']
 
     @api.model
     def _get_integrations_channel_selection(self):

@@ -18,10 +18,19 @@
             <field name="arch" type="xml">
                 <form string="Integrations">
                     <sheet>
-                        <group>
-                            <field name="name"/>
-                            <field name="channel"/>
-                        </group>
+                        <field name="image_1920" widget='image' class="oe_avatar"
+                               options='{"zoom": true, "preview_image":"image_128"}'/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Integration's Name"/>
+                            </h1>
+                            <label for="channel" class=""/>
+                            <h2>
+                                <field name="channel"/>
+                            </h2>
+
+                        </div>
                     </sheet>
                 </form>
             </field>
@@ -33,8 +42,38 @@
             <field name="arch" type="xml">
                 <search string="Integration">
                     <field name="omna_tenant_id"/>
-                    <filter name="current_tenant" string="Current Tenant" domain="[('omna_tenant_id', '=', context.get('omna_current_tenant'))]"/>
+                    <filter name="current_tenant" string="Current Tenant"
+                            domain="[('omna_tenant_id', '=', context.get('omna_current_tenant'))]"/>
                 </search>
+            </field>
+        </record>
+
+        <record id="omna_kanban_view_integrations" model="ir.ui.view">
+            <field name="name">omna.integration.kanban</field>
+            <field name="model">omna.integration</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile o_omna_kanban_integrations" quick_create="false">
+                    <field name="id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="w-100 text-center">
+                                    <img t-att-src="kanban_image('omna.integration', 'image_128', record.id.raw_value)"
+                                         alt="Integration" class="o_image_96_contain"/>
+
+                                </div>
+                                <div class="w-100 card-footer">
+                                    <div class="">
+                                        <strong class="text-uppercase">
+                                            <field name="name" placeholder="Integration's Name"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -42,7 +81,7 @@
             <field name="name">Integrations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">omna.integration</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_current_tenant': 1}</field>
         </record>
 
