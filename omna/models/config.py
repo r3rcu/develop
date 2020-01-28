@@ -64,7 +64,7 @@ class OnmaSignInSettings(models.TransientModel):
     _name = "omna.signin.settings"
     _inherit = "res.config.settings"
 
-    cenit_url = fields.Char('OMNA API URL', default='https://cenit.io/app/ecapi_v1', required=True)
+    cenit_url = fields.Char('OMNA API URL', default='https://cenit.io/app/ecapi-v1')
 
     @api.model
     def get_values(self):

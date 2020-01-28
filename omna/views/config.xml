@@ -18,7 +18,7 @@
                     <div>
                         <group string="Connection settings">
                             <field name="cenit_url"
-                                   placeholder="Omna API url (Default: 'https://cenit.io/app/ecapi_v1')"/>
+                                   placeholder="Omna API url (Default: 'https://cenit.io/app/ecapi-v1')"/>
                         </group>
                     </div>
                 </form>
@@ -63,7 +63,7 @@
                         Set the credentials given to your Cenit tenant.
                     </p>
                     <group>
-                        <field name="cenit_url" placeholder="Omna API url (Default: 'https://cenit.io/app/ecapi_v1')"/>
+                        <field name="cenit_url" placeholder="Omna API url (Default: 'https://cenit.io/app/ecapi-v1')"/>
                     </group>
                 </separator>
             </field>
@@ -101,7 +101,7 @@
                         Set the OMNA API url.
                     </p>
                     <group>
-                        <field name="cenit_url" placeholder="Omna API url (Default: 'https://cenit.io/app/ecapi_v1')"/>
+                        <field name="cenit_url" placeholder="Omna API url (Default: 'https://cenit.io/app/ecapi-v1')"/>
                     </group>
                 </separator>
             </field>
@@ -123,7 +123,7 @@
                     <div>
                         <group string="Omna API url">
                             <field name="cenit_url"
-                                   placeholder="Your Omna api's url (Default: 'https://cenit.io/app/ecapi_v1')"/>
+                                   placeholder="Your Omna api's url (Default: 'https://cenit.io/app/ecapi-v1')"/>
                         </group>
                     </div>
                 </form>

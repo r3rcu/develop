@@ -7,7 +7,7 @@ odoo.define('omna.SignIn', function (require) {
          start: function(){
                if(session.user_context.omna_get_access_token_code){
                  return $.ajax({
-                            url: 'https://cenit.io/app/ecapi_v1/get_access_token',
+                            url: session.user_context.omna_get_access_token_url,
                             dataType: 'json',
                             type: 'POST',
                             data: JSON.stringify({'code': session.user_context.omna_get_access_token_code}),
