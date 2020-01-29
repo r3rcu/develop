@@ -182,88 +182,94 @@ class OmnaFlow(models.Model):
 
     @api.model
     def create(self, vals):
-        integration = self.env['omna.integration'].search([('id', '=', vals.get('integration_id'))], limit=1)
-        data = {
-            "integration_id": integration.integration_id,
-            "type": vals.get('type'),
-            "scheduler": {}
-        }
+        if not self._context.get('synchronizing'):
+            integration = self.env['omna.integration'].search([('id', '=', vals.get('integration_id'))], limit=1)
+            data = {
+                "integration_id": integration.integration_id,
+                "type": vals.get('type'),
+                "scheduler": {}
+            }
 
-        if 'start_date' in vals:
-            start_date = datetime.datetime.strptime(vals.get('start_date'), "%Y-%m-%d %H:%M:%S")
-            data['scheduler']['start_date'] = start_date.date().strftime("%Y-%m-%d")
-            data['scheduler']['time'] = start_date.time().strftime("%H:%M")
-        if 'end_date' in vals:
-            end_date = datetime.datetime.strptime(vals.get('end_date'), "%Y-%m-%d")
-            data['scheduler']['end_date'] = end_date.strftime("%Y-%m-%d")
-        if 'days_of_week' in vals:
-            dow = []
-            days = self.env['omna.filters'].search([('type', '=', 'dow'), ('id', 'in', vals.get('days_of_week')[0][2])])
-            for day in days:
-                dow.append(day.name)
-            data['scheduler']['days_of_week'] = dow
-        if 'weeks_of_month' in vals:
-            wom = []
-            weeks = self.env['omna.filters'].search([('type', '=', 'wom'), ('id', 'in', vals.get('weeks_of_month')[0][2])])
-            for week in weeks:
-                wom.append(week.name)
-            data['scheduler']['weeks_of_month'] = wom
-        if 'months_of_year' in vals:
-            moy = []
-            months = self.env['omna.filters'].search([('type', '=', 'moy'), ('id', 'in', vals.get('months_of_year')[0][2])])
-            for month in months:
-                moy.append(month.name)
-            data['scheduler']['months_of_year'] = moy
+            if 'start_date' in vals:
+                start_date = datetime.datetime.strptime(vals.get('start_date'), "%Y-%m-%d %H:%M:%S")
+                data['scheduler']['start_date'] = start_date.date().strftime("%Y-%m-%d")
+                data['scheduler']['time'] = start_date.time().strftime("%H:%M")
+            if 'end_date' in vals:
+                end_date = datetime.datetime.strptime(vals.get('end_date'), "%Y-%m-%d")
+                data['scheduler']['end_date'] = end_date.strftime("%Y-%m-%d")
+            if 'days_of_week' in vals:
+                dow = []
+                days = self.env['omna.filters'].search([('type', '=', 'dow'), ('id', 'in', vals.get('days_of_week')[0][2])])
+                for day in days:
+                    dow.append(day.name)
+                data['scheduler']['days_of_week'] = dow
+            if 'weeks_of_month' in vals:
+                wom = []
+                weeks = self.env['omna.filters'].search([('type', '=', 'wom'), ('id', 'in', vals.get('weeks_of_month')[0][2])])
+                for week in weeks:
+                    wom.append(week.name)
+                data['scheduler']['weeks_of_month'] = wom
+            if 'months_of_year' in vals:
+                moy = []
+                months = self.env['omna.filters'].search([('type', '=', 'moy'), ('id', 'in', vals.get('months_of_year')[0][2])])
+                for month in months:
+                    moy.append(month.name)
+                data['scheduler']['months_of_year'] = moy
 
-        response = self.post('flows', {'data': data})
-        if 'id' in response.get('data'):
-            vals['omna_id'] = response.get('data').get('id')
-            return super(OmnaFlow, self).create(vals)
+            response = self.post('flows', {'data': data})
+            if 'id' in response.get('data'):
+                vals['omna_id'] = response.get('data').get('id')
+                return super(OmnaFlow, self).create(vals)
+            else:
+                raise exceptions.AccessError("Error trying to push the workflow to Omna.")
         else:
-            raise exceptions.AccessError("Error trying to push the workflow to Omna.")
+            return super(OmnaFlow, self).create(vals)
 
     def write(self, vals):
         self.ensure_one()
-        if 'type' in vals:
-            raise UserError("You cannot change the type of a worflow. Instead you should delete the current workflow and create a new one of the proper type.")
-        if 'integration_id' in vals:
-            raise UserError("You cannot change the integration of a worflow. Instead you should delete the current workflow and create a new one of the proper type.")
+        if not self._context.get('synchronizing'):
+            if 'type' in vals:
+                raise UserError("You cannot change the type of a worflow. Instead you should delete the current workflow and create a new one of the proper type.")
+            if 'integration_id' in vals:
+                raise UserError("You cannot change the integration of a worflow. Instead you should delete the current workflow and create a new one of the proper type.")
 
-        data = {
-            "scheduler": {}
-        }
+            data = {
+                "scheduler": {}
+            }
 
-        if 'start_date' in vals:
-            start_date = datetime.datetime.strptime(vals.get('start_date'), "%Y-%m-%d %H:%M:%S")
-            data['scheduler']['start_date'] = start_date.date().strftime("%Y-%m-%d")
-            data['scheduler']['time'] = start_date.time().strftime("%H:%M")
-        if 'end_date' in vals:
-            end_date = datetime.datetime.strptime(vals.get('end_date'), "%Y-%m-%d")
-            data['scheduler']['end_date'] = end_date.strftime("%Y-%m-%d")
-        if 'days_of_week' in vals:
-            dow = []
-            days = self.env['omna.filters'].search([('type', '=', 'dow'), ('id', 'in', vals.get('days_of_week')[0][2])])
-            for day in days:
-                dow.append(day.name)
-            data['scheduler']['days_of_week'] = dow
-        if 'weeks_of_month' in vals:
-            wom = []
-            weeks = self.env['omna.filters'].search([('type', '=', 'wom'), ('id', 'in', vals.get('weeks_of_month')[0][2])])
-            for week in weeks:
-                wom.append(week.name)
-            data['scheduler']['weeks_of_month'] = wom
-        if 'months_of_year' in vals:
-            moy = []
-            months = self.env['omna.filters'].search([('type', '=', 'moy'), ('id', 'in', vals.get('months_of_year')[0][2])])
-            for month in months:
-                moy.append(month.name)
-            data['scheduler']['months_of_year'] = moy
+            if 'start_date' in vals:
+                start_date = datetime.datetime.strptime(vals.get('start_date'), "%Y-%m-%d %H:%M:%S")
+                data['scheduler']['start_date'] = start_date.date().strftime("%Y-%m-%d")
+                data['scheduler']['time'] = start_date.time().strftime("%H:%M")
+            if 'end_date' in vals:
+                end_date = datetime.datetime.strptime(vals.get('end_date'), "%Y-%m-%d")
+                data['scheduler']['end_date'] = end_date.strftime("%Y-%m-%d")
+            if 'days_of_week' in vals:
+                dow = []
+                days = self.env['omna.filters'].search([('type', '=', 'dow'), ('id', 'in', vals.get('days_of_week')[0][2])])
+                for day in days:
+                    dow.append(day.name)
+                data['scheduler']['days_of_week'] = dow
+            if 'weeks_of_month' in vals:
+                wom = []
+                weeks = self.env['omna.filters'].search([('type', '=', 'wom'), ('id', 'in', vals.get('weeks_of_month')[0][2])])
+                for week in weeks:
+                    wom.append(week.name)
+                data['scheduler']['weeks_of_month'] = wom
+            if 'months_of_year' in vals:
+                moy = []
+                months = self.env['omna.filters'].search([('type', '=', 'moy'), ('id', 'in', vals.get('months_of_year')[0][2])])
+                for month in months:
+                    moy.append(month.name)
+                data['scheduler']['months_of_year'] = moy
 
-        response = self.post('flows/%s' % self.omna_id, {'data': data})
-        if 'id' in response.get('data'):
-            return super(OmnaFlow, self).write(vals)
+            response = self.post('flows/%s' % self.omna_id, {'data': data})
+            if 'id' in response.get('data'):
+                return super(OmnaFlow, self).write(vals)
+            else:
+                raise exceptions.AccessError("Error trying to update the workflow in Omna.")
         else:
-            raise exceptions.AccessError("Error trying to update the workflow in Omna.")
+            return super(OmnaFlow, self).write(vals)
 
     def unlink(self):
         self.check_access_rights('unlink')

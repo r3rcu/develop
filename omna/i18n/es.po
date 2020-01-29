@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 13.0-20191106\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-01-28 04:20+0000\n"
-"PO-Revision-Date: 2020-01-28 00:12-0500\n"
+"PO-Revision-Date: 2020-01-28 23:11-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1193,13 +1193,13 @@ msgstr "Plantilla de producto"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_product_product__omna_variant_id
 msgid "Product Variant identifier in OMNA"
-msgstr ""
+msgstr "Identificador de variante de product en OMNA"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_product_product__omna_product_id
 #: model:ir.model.fields,field_description:omna.field_product_template__omna_product_id
 msgid "Product identifier in OMNA"
-msgstr ""
+msgstr "Identificador del product en OMNA"
 
 #. module: omna
 #: model:ir.actions.act_window,name:omna.action_omna_products
@@ -1211,12 +1211,12 @@ msgstr "Productos"
 #: model:ir.actions.act_window,name:omna.action_omna_products_variants
 #: model:ir.ui.menu,name:omna.menu_omna_products_variants
 msgid "Products Variants"
-msgstr ""
+msgstr "Variantes de productos"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_task__progress
 msgid "Progress"
-msgstr ""
+msgstr "Progreso"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_sale_quotation_builder
@@ -1238,13 +1238,13 @@ msgstr "Reintentar"
 #. module: omna
 #: model:ir.model.fields.selection,name:omna.selection__omna_task__status__retrying
 msgid "Retrying"
-msgstr ""
+msgstr "Reintentando"
 
 #. module: omna
 #: model:ir.model.fields.selection,name:omna.selection__omna_task__status__running
 #: model:ir.model.fields.selection,name:omna.selection__omna_task_execution__status__running
 msgid "Running"
-msgstr ""
+msgstr "En ejecución"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_account_sepa
@@ -1277,17 +1277,17 @@ msgstr "Línea de pedido de venta"
 #. module: omna
 #: model_terms:ir.ui.view,arch_db:omna.omna_flow_form_view
 msgid "Scheduler"
-msgstr ""
+msgstr "Planificador"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_tenant__secret
 msgid "Secret"
-msgstr ""
+msgstr "Frase secreta"
 
 #. module: omna
 #: model:ir.model.fields,help:omna.field_omna_flow__start_date
 msgid "Select date and time"
-msgstr ""
+msgstr "Seleccione fecha y hora"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__invoice_is_email
@@ -1304,17 +1304,17 @@ msgstr "Enviar por Correo Postal"
 #. module: omna
 #: model_terms:ir.ui.view,arch_db:omna.omna_tenant_form_view
 msgid "Set as Current Tenant"
-msgstr ""
+msgstr "Establecer como inquilino actual"
 
 #. module: omna
 #: model_terms:ir.ui.view,arch_db:omna.wizard_omna_sign_in_install
 msgid "Set the OMNA API url."
-msgstr ""
+msgstr "Establezca la URL de la API OMNA."
 
 #. module: omna
 #: model_terms:ir.ui.view,arch_db:omna.wizard_omna_install
 msgid "Set the credentials given to your Cenit tenant."
-msgstr ""
+msgstr "Establezca las credenciales otorgadas a su inquilino de Cenit."
 
 #. module: omna
 #: model:ir.actions.act_window,name:omna.action_omna_settings
@@ -1334,7 +1334,7 @@ msgstr "Costos de envío"
 #: model:ir.model.fields,field_description:omna.field_omna_settings__show_effect
 #: model:ir.model.fields,field_description:omna.field_omna_signin_settings__show_effect
 msgid "Show Effect"
-msgstr ""
+msgstr "Mostrar efecto"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_show_line_subtotals_tax_included
@@ -1354,7 +1354,7 @@ msgstr "Mostrar subtotales de línea sin impuestos (B2B)"
 #: model:ir.ui.menu,name:omna.menu_omna_sign_in
 #: model_terms:ir.ui.view,arch_db:omna.view_omna_sign_in
 msgid "Sign in with Omna"
-msgstr ""
+msgstr "Iniciar session con OMNA"
 
 #. module: omna
 #: model_terms:ir.ui.view,arch_db:omna.wizard_omna_sign_in_install
@@ -1378,7 +1378,7 @@ msgstr "Correo electrónico específico"
 #: model_terms:ir.ui.view,arch_db:omna.view_action_start_workflows_wizard
 #: model_terms:ir.ui.view,arch_db:omna.view_action_status_workflows_wizard
 msgid "Start"
-msgstr ""
+msgstr "Iniciar"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_flow__start_date
@@ -1388,12 +1388,12 @@ msgstr "Fecha de inicio"
 #. module: omna
 #: model:ir.actions.act_window,name:omna.action_omna_workflows_start
 msgid "Start Flow"
-msgstr ""
+msgstr "Iniciar Flujo"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_task_execution__exec_started_at
 msgid "Started At"
-msgstr ""
+msgstr "Iniciado el"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_task__status
