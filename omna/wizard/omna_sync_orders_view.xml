@@ -9,7 +9,7 @@
                 <form string="Sync Orders">
                     <group>
                         <div>
-                            Wizard to syncronize orders from OMNA.
+                            Wizard to synchronize orders from OMNA.
                         </div>
                     </group>
                     <footer>

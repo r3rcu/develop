@@ -89,6 +89,31 @@ class OmnaApi(models.AbstractModel):
         raise exceptions.ValidationError(error.get('message', "Omna's API returned with errors"))
 
     @api.model
+    def patch(self, path, params={}):
+        payload = self._sign_request(path, params)
+        config = self.get_config()
+        try:
+            _logger.info("[PATCH] %s ? %s", '%s/%s' % (config['omna_api_url'], path), payload)
+            r = requests.patch('%s/%s' % (config['omna_api_url'], path), json=payload, headers={'Content-Type': 'application/json'})
+        except Exception as e:
+            _logger.error(e)
+            raise exceptions.AccessError("Error trying to connect to Omna's API.")
+        if 200 <= r.status_code < 300:
+            return r.json()
+
+        try:
+            error = r.json()
+            _logger.error(error)
+        except Exception as e:
+            _logger.error(e)
+            raise exceptions.ValidationError("Omna's API returned with errors")
+
+        if 400 <= error.get('code', 400) < 500:
+            raise exceptions.AccessError(error.get('message', "Error trying to connect to Omna's API."))
+
+        raise exceptions.ValidationError(error.get('message', "Omna's API returned with errors"))
+
+    @api.model
     def delete(self, path, params={}):
         payload = self._sign_request(path, params)
         config = self.get_config()

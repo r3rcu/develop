@@ -9,7 +9,7 @@
                 <form string="Sync Workflows">
                     <group>
                         <div>
-                            Wizard to syncronize workflows from OMNA.
+                            Wizard to synchronize workflows from OMNA.
                         </div>
                     </group>
                     <footer>

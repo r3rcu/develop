@@ -672,3 +672,38 @@ class OmnaTenant(models.Model):
         else:
             return False
 
+
+class OmnaCollection(models.Model):
+    _name = 'omna.collection'
+    _inherit = 'omna.api'
+
+    @api.model
+    def _current_tenant(self):
+        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
+        if current_tenant:
+            return current_tenant.id
+        else:
+            return None
+
+    omna_tenant_id = fields.Many2one('omna.tenant', 'Tenant', required=True, default=_current_tenant)
+    name = fields.Char('Name', required=True)
+    title = fields.Char('Title', required=True)
+    omna_id = fields.Char('OMNA Collection id')
+    shared_version = fields.Char('Shared Version')
+    summary = fields.Text('Summary')
+    state = fields.Selection([('outdated', 'Outdated'), ('installed', 'Installed')], 'State')
+    updated_at = fields.Datetime('Updated At')
+    installed_at = fields.Datetime('Installed At')
+
+    def install_collection(self):
+        self.ensure_one()
+        self.patch('collections/%s' % self.omna_id, {})
+        return True
+
+    def uninstall_collection(self):
+        self.ensure_one()
+        self.delete('collections/%s' % self.omna_id, {})
+        return True
+
+
+

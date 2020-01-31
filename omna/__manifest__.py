@@ -51,6 +51,7 @@
         'views/tasks.xml',
         'views/flows.xml',
         'views/tenants.xml',
+        'views/collections.xml',
         'views/omna_templates.xml',
 
         # wizard
@@ -61,6 +62,7 @@
         'wizard/omna_action_start_workflows_view.xml',
         'wizard/omna_action_status_workflows_view.xml',
         'wizard/omna_sync_tenants_view.xml',
+        'wizard/omna_sync_collections_view.xml',
 
         # initial data
         'data/dow.xml',

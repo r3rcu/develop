@@ -19,9 +19,21 @@ class OmnaSyncIntegrations(models.TransientModel):
 
     def sync_integrations(self):
         try:
-            response = self.get('integrations', {})
+            limit = 100
+            offset = 0
+            requester = True
+            integrations = []
+            while requester:
+                response = self.get('integrations', {'limit': limit, 'offset': offset})
+                data = response.get('data')
+                integrations.extend(data)
+                if len(data) < limit:
+                    requester = False
+                else:
+                    offset += limit
+
             integration_obj = self.env['omna.integration']
-            for integration in response.get('data'):
+            for integration in integrations:
                 act_integration = integration_obj.search([('integration_id', '=', integration.get('id'))])
                 if act_integration:
                     data = {

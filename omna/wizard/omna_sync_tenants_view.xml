@@ -9,7 +9,7 @@
                 <form string="Sync Tenants">
                     <group>
                         <div>
-                            Wizard to syncronize tenants from OMNA.
+                            Wizard to synchronize tenants from OMNA.
                         </div>
                     </group>
                     <footer>

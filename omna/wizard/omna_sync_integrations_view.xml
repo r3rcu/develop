@@ -9,7 +9,7 @@
                 <form string="Sync Integrations">
                     <group>
                         <div>
-                            Wizard to syncronize integrations from OMNA.
+                            Wizard to synchronize integrations from OMNA.
                         </div>
                     </group>
                     <footer>
