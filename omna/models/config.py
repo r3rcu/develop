@@ -36,7 +36,7 @@ class OmnaSettings(models.TransientModel):
     _name = 'omna.settings'
     _inherit = 'res.config.settings'
 
-    cenit_url = fields.Char('Cenit URL')
+    cenit_url = fields.Char('Cenit URL', default='https://cenit.io/app/ecapi-v1')
 
 
     ############################################################################
@@ -62,26 +62,15 @@ class OmnaSettings(models.TransientModel):
 
 class OnmaSignInSettings(models.TransientModel):
     _name = "omna.signin.settings"
-    _inherit = "res.config.settings"
 
-    cenit_url = fields.Char('OMNA API URL', default='https://cenit.io/app/ecapi-v1')
+    def _default_url(self):
+        return self.env['ir.config_parameter'].sudo().get_param("omna_odoo.cenit_url", 'https://cenit.io/app/ecapi-v1')
 
-    @api.model
-    def get_values(self):
-        res = super(OnmaSignInSettings, self).get_values()
-        res.update(
-            cenit_url=self.env["ir.config_parameter"].sudo().get_param("omna_odoo.cenit_url", default=None)
-        )
-        return res
-
-    ############################################################################
-    # Actions
-    ############################################################################
+    cenit_url = fields.Char('OMNA API URL', default=_default_url)
 
     def execute(self):
-        self.env.user.context_omna_sing_in_ip = request.httprequest.environ['REMOTE_ADDR']
         redirect = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/omna/sign_in/'
-        self.env['ir.config_parameter'].sudo().set_param("omna_odoo.cenit_url", self.cenit_url or '')
+        self.env['ir.config_parameter'].sudo().set_param("omna_odoo.cenit_url", self.cenit_url or 'https://cenit.io/app/ecapi-v1')
         return {
             "type": "ir.actions.act_url",
             "url": '%s?%s' % (self.cenit_url + '/sign_in', werkzeug.urls.url_encode({'redirect_uri': redirect})),

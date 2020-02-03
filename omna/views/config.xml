@@ -8,19 +8,16 @@
             <field name="arch" type="xml">
                 <form string="Configure Omnab"
                       class="oe_form_configuration">
-                    <header>
-                        <button string="Apply" type="object" name="execute"
-                                class="oe_highlight"/>
-                        or
-                        <button string="Cancel" type="object" name="cancel"
-                                class="oe_link"/>
-                    </header>
                     <div>
                         <group string="Connection settings">
                             <field name="cenit_url"
                                    placeholder="Omna API url (Default: 'https://cenit.io/app/ecapi-v1')"/>
                         </group>
                     </div>
+                    <footer>
+                        <button string="Apply" type="object" name="execute"
+                                class="oe_highlight"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -29,7 +26,7 @@
             <field name="name">Settings</field>
             <field name="res_model">omna.settings</field>
             <field name="view_mode">form</field>
-            <field name="target">inline</field>
+            <field name="target">new</field>
             <field name="view_id" ref="view_omna_settings"/>
         </record>
 
@@ -42,90 +39,23 @@
         <menuitem id="menu_omna_settings_alt" name="Settings"
                   parent="menu_omna_integration" sequence="10"/>
 
-
-        <record id="wizard_omna_install" model="ir.ui.view">
-            <field name="name">Omna settings</field>
-            <field name="model">omna.settings</field>
-            <field name="inherit_id" ref="base.res_config_installer"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <form position="attributes">
-                    <attribute name="string">Cenit account settings</attribute>
-                </form>
-                <footer position="replace">
-                    <footer>
-                        <button string="Apply" type="object" name="execute"
-                                class="oe_highlight" context="{'install': True}"/>
-                    </footer>
-                </footer>
-                <separator position="replace">
-                    <p class="oe_grey">
-                        Set the credentials given to your Cenit tenant.
-                    </p>
-                    <group>
-                        <field name="cenit_url" placeholder="Omna API url (Default: 'https://cenit.io/app/ecapi-v1')"/>
-                    </group>
-                </separator>
-            </field>
-        </record>
-
-        <record id="action_wizard_omna_install" model="ir.actions.act_window">
-            <field name="name">Configure Omna data</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">omna.settings</field>
-            <field name="view_id" ref="wizard_omna_install"/>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
         <record id="wizard_omna_sign_in_install" model="ir.ui.view">
             <field name="name">Omna sign in</field>
             <field name="model">omna.signin.settings</field>
-            <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <form position="attributes">
-                    <attribute name="string">Omna Sign in</attribute>
-                </form>
-                <footer position="replace">
-                    <footer>
-                        <button string="Apply" type="object" name="execute"
-                                class="oe_highlight" context="{'install': True}"/>
-                        or
-                        <button string="Skip" type="action" name="%(action_wizard_omna_install)d"
-                                class="oe_link"/>
-                    </footer>
-                </footer>
-                <separator position="replace">
+                <form>
                     <p class="oe_grey">
                         Set the OMNA API url.
                     </p>
                     <group>
-                        <field name="cenit_url" placeholder="Omna API url (Default: 'https://cenit.io/app/ecapi-v1')"/>
+                        <field name="cenit_url"
+                               placeholder="Omna API url (Default: 'https://cenit.io/app/ecapi-v1')"/>
                     </group>
-                </separator>
-            </field>
-        </record>
-
-        <record id="view_omna_sign_in" model="ir.ui.view">
-            <field name="name">Sign in with Omna</field>
-            <field name="model">omna.signin.settings</field>
-            <field name="arch" type="xml">
-                <form string="Sign in with Omna"
-                      class="oe_form_configuration">
-                    <header>
+                    <footer>
                         <button string="Apply" type="object" name="execute"
-                                class="oe_highlight"/>
-                        or
-                        <button string="Cancel" type="object" name="cancel"
-                                class="oe_link"/>
-                    </header>
-                    <div>
-                        <group string="Omna API url">
-                            <field name="cenit_url"
-                                   placeholder="Your Omna api's url (Default: 'https://cenit.io/app/ecapi-v1')"/>
-                        </group>
-                    </div>
+                                class="oe_highlight" context="{'install': True}"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -139,21 +69,13 @@
             <field name="target">new</field>
         </record>
 
-        <record id="action_wizard_omna_sign_in" model="ir.actions.act_window">
-            <field name="name">Sign in with Omna</field>
-            <field name="res_model">omna.signin.settings</field>
-            <field name="view_mode">form</field>
-            <field name="target">inline</field>
-            <field name="view_id" ref="view_omna_sign_in"/>
-        </record>
-
         <menuitem id="menu_omna_settings_hub" name="Settings"
                   parent="menu_omna_settings_alt" sequence="0"
-                  action="action_wizard_omna_install"/>
+                  action="action_omna_settings"/>
 
         <menuitem id="menu_omna_sign_in" name="Sign in with Omna"
                   parent="menu_omna_settings_alt" sequence="0"
-                  action="action_wizard_omna_sign_in"/>
+                  action="action_wizard_omna_sign_in_install"/>
 
         <record id="todo_wizard_omna_install" model="ir.actions.todo">
             <field name="action_id" ref="action_wizard_omna_sign_in_install"/>
