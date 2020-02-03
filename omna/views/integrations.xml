@@ -58,16 +58,18 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
-                                <div class="w-100 text-center">
-                                    <img t-att-src="kanban_image('omna.integration', 'image_128', record.id.raw_value)"
-                                         alt="Integration" class="o_image_96_contain"/>
-
-                                </div>
-                                <div class="w-100 card-footer">
+                                <div class="oe_omna_kanban_integration_title d-flex b-white">
                                     <div class="">
-                                        <strong class="text-uppercase">
+                                        <img t-att-src="kanban_image('omna.integration', 'image_128', record.id.raw_value)"
+                                             alt="Integration" class="o_image_64_contain"/>
+                                    </div>
+                                    <div class="d-table-cell align-self-center">
+                                        <h3>
                                             <field name="name" placeholder="Integration's Name"/>
-                                        </strong>
+                                        </h3>
+                                        <span>
+                                            <field name="channel"></field>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -78,14 +80,14 @@
         </record>
 
         <record id="action_omna_integration" model="ir.actions.act_window">
-            <field name="name">Integrations</field>
+            <field name="name">My Integrations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">omna.integration</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_current_tenant': 1}</field>
         </record>
 
-        <menuitem id="menu_omna_my_integrations" name="Integrations" parent="menu_omna_system" sequence="0"
+        <menuitem id="menu_omna_my_integrations" name="My Integrations" parent="menu_omna_integrations" sequence="0"
                   action="action_omna_integration"/>
 
     </data>

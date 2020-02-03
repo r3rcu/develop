@@ -1,5 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_omna_integration,access_omna_integration,model_omna_integration,omna.group_omna_manager,1,1,1,1
+access_omna_integration_channel,access_omna_integration_channel,model_omna_integration_channel,omna.group_omna_manager,1,0,0,0
 access_omna_webhook,access_omna_webhook,model_omna_webhook,omna.group_omna_manager,1,1,1,1
 access_omna_flow,access_omna_flow,model_omna_flow,omna.group_omna_manager,1,1,1,1
 access_omna_filters,access_omna_filters,model_omna_filters,omna.group_omna_manager,1,1,1,1

@@ -47,6 +47,7 @@
         'views/config.xml',
         'views/data.xml',
         'views/integrations.xml',
+        'views/integration_channels.xml',
         'views/webhooks.xml',
         'views/tasks.xml',
         'views/flows.xml',

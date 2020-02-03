@@ -706,4 +706,61 @@ class OmnaCollection(models.Model):
         return True
 
 
+class OmnaIntegrationChannel(models.Model):
+    _name = 'omna.integration_channel'
+    _inherit = 'omna.api'
+
+    name = fields.Char('Name', required=True)
+    title = fields.Char('Title', required=True)
+    group = fields.Char('Group', required=True)
+    logo = fields.Char('Logo src', compute='_compute_logo')
+
+    @api.depends('group')
+    def _compute_logo(self):
+        for record in self:
+            record.logo = self._get_logo(record.group)
+
+    @api.model
+    def _get_logo(self, group):
+        if group == 'Lazada':
+            logo = '/omna/static/src/img/lazada_logo.png'
+        elif group == 'Qoo10':
+            logo = '/omna/static/src/img/qoo10_logo.png'
+        elif group == 'Shopee':
+            logo = '/omna/static/src/img/shopee_logo.png'
+        elif group == 'Shopify':
+            logo = '/omna/static/src/img/shopify_logo.png'
+        elif group == 'MercadoLibre':
+            logo = '/omna/static/src/img/mercadolibre_logo.png'
+        else:
+            logo = '/omna/static/src/img/marketplace_placeholder.png'
+        return logo
+
+
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        self.check_access_rights('read')
+        fields = self.check_field_access_rights('read', fields)
+        result = []
+        channels = self.get('integrations/channels', {})
+        for channel in channels.get('data'):
+            res = {
+                'id': '1-' + channel.get('name'),  # amazing hack needed to open records with virtual ids
+                'name': channel.get('name'),
+                'title': channel.get('title'),
+                'group': channel.get('group'),
+                'logo': self._get_logo(channel.get('group'))
+            }
+            result.append(res)
+
+        return result
+
+    def add_integration(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'omna.integration',
+            'view_mode': 'form',
+            'target': 'current',
+            'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
+        }
 
