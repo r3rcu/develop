@@ -6,11 +6,9 @@
     'summary': 'Shopify, Shopee, Lazada, Qoo10, MercadoLibre, Backmarket, Shipstation',
     'description': 'Integrate global online marketplaces & web-stores with Odoo. Sync products, inventory and orders from multiple channels'"',
     'author': 'OMNA Pte Ltd',
-    'website': 'https://www.omna.io/'',
+    'website': 'https://www.omna.io/',
     'license': 'OPL-1'
     'support': 'support@omna.io'
-    'price': '49'
-    'currency': 'USD'
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'sale_management'],
