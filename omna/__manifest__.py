@@ -7,8 +7,8 @@
     'description': 'Integrate global online marketplaces & web-stores with Odoo. Sync products, inventory and orders from multiple channels'"',
     'author': 'OMNA Pte Ltd',
     'website': 'https://www.omna.io/',
-    'license': 'OPL-1'
-    'support': 'support@omna.io'
+    'license': 'OPL-1',
+    'support': 'support@omna.io',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'sale_management'],
