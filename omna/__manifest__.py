@@ -1,16 +1,37 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'OMNA Marketplace Connector',
-    'version': '13.0.0.1.0',
-    'category': 'Sales',
-    'summary': 'Shopify, Shopee, Lazada, Qoo10, MercadoLibre, Backmarket, Shipstation',
-    'description': 'Integrate global online marketplaces & web-stores with Odoo. Sync products, inventory and orders from multiple channels'"',
-    'author': 'OMNA Pte Ltd',
-    'website': 'https://www.omna.io/'',
-    'license': 'OPL-1'
-    'support': 'support@omna.io'
-    'price': '49'
-    'currency': 'USD'
+    'name': "OMNA for Odoo",
+
+    'summary': """Automate Multichannel Selling, OMNA API""",
+
+    'description': """
+        Manage multiple sales channel efficiently. Integrated with online marketplaces for product 
+        listing, order consolidation, and inventory sync.
+
+        Supported Integrations:
+            - Shopify
+            - Shopee
+            - Lazada
+            - Qoo10
+            - MercadoLibre
+            - Backmarket
+            - Shipstation
+
+        The OMNA Commerce API is simple connector API to integrate ecommerce sale channels, such us marketplaces and ecommerce platforms.
+
+        An easy way to get orders, synchronize inventory and list product information to commerce solutions around the globe.
+
+        It is built on top of an integration platform Cenit IO (https://cenit.io)
+    """,
+
+    'author': "OMNA Pte Ltd",
+    'website': "https://www.omna.io/",
+
+    # Categories can be used to filter modules in modules listing
+    # Check https://github.com/odoo/odoo/blob/13.0/odoo/addons/base/data/ir_module_category_data.xml
+    # for the full list
+    'category': 'Extra Tools',
+    'version': '0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'sale_management'],
