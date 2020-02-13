@@ -4,7 +4,7 @@
     'version': '13.0.0.1.0',
     'category': 'Sales',
     'summary': 'Shopify, Shopee, Lazada, Qoo10, MercadoLibre, Backmarket, Shipstation',
-    'description': 'Integrate global online marketplaces & web-stores with Odoo. Sync products, inventory and orders from multiple channels'"',
+    'description': 'Integrate global online marketplaces & web-stores with Odoo. Sync products, inventory and orders from multiple channels',
     'author': 'OMNA Pte Ltd',
     'website': 'https://www.omna.io/',
     'license': 'OPL-1',
