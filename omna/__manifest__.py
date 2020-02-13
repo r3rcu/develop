@@ -55,6 +55,7 @@
     'demo': [
         'demo/demo.xml',
     ],
+    'images': ['static/images/banner.jpg'],
     "installable": True,
     'application': True,
     'auto_install': False,
