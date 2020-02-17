@@ -53,3 +53,17 @@ class Omna(http.Controller):
             return True
 
         return False
+
+    @http.route('/omna/integrations/authorize/<string:integration_id>', type='http', auth='user', methods=['GET'])
+    def authorize_integration(self, integration_id, **kw):
+        request.env.user.context_omna_get_access_token_code = None
+        integration = request.env['omna.integration'].search(['integration_id', '=', integration_id], limit=1)
+        if integration:
+            integration.write({'authorized': True})
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload',
+                'params': {'menu_id': self.env.ref('omna.menu_omna_integration').id},
+            }
+        else:
+            raise exceptions.AccessError("Invalid integration id.")

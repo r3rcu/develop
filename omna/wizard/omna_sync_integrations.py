@@ -38,14 +38,16 @@ class OmnaSyncIntegrations(models.TransientModel):
                 if act_integration:
                     data = {
                         'name': integration.get('name'),
-                        'channel': integration.get('channel')
+                        'channel': integration.get('channel'),
+                        'authorized': integration.get('authorized')
                     }
                     act_integration.with_context(synchronizing=True).write(data)
                 else:
                     data = {
                         'name': integration.get('name'),
                         'integration_id': integration.get('id'),
-                        'channel': integration.get('channel')
+                        'channel': integration.get('channel'),
+                        'authorized': integration.get('authorized')
                     }
                     act_integration = integration_obj.with_context(synchronizing=True).create(data)
             return {

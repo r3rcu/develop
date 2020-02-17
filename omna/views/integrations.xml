@@ -8,6 +8,7 @@
                 <tree string="Integrations">
                     <field name="name"/>
                     <field name="channel"/>
+                    <field name="authorized"/>
                 </tree>
             </field>
         </record>
@@ -55,6 +56,8 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile o_omna_kanban_integrations" quick_create="false">
                     <field name="id"/>
+                    <field name="authorized"/>
+                    <field name="integration_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -70,6 +73,28 @@
                                         <span>
                                             <field name="channel"></field>
                                         </span>
+                                    </div>
+                                </div>
+                                <div class="w-100 card-footer b-white">
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        <t t-if="record.authorized.raw_value == true">
+                                            <button type="object" name="unauthorize"
+                                                    class="btn btn-basic" string="Unauthorize">
+                                                <span style="font-size: 1.5rem" class="fa fa-times-circle text-danger"
+                                                      role="img"></span>
+                                            </button>
+                                        </t>
+                                        <t t-else="">
+                                            <button type="object" name="authorize"
+                                               class="btn btn-basic text-success" string="Authorize">
+                                                <span style="font-size: 1.5rem" class="fa fa-check-circle"
+                                                      role="img"></span>
+                                            </button>
+                                        </t>
+                                        <button type="object" name="unlink" class="btn btn-basic text-danger"
+                                                string="Delete">
+                                            <span style="font-size: 1.5rem" class="fa fa-trash" role="img"></span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>

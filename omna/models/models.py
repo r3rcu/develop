@@ -4,7 +4,9 @@ import odoo
 import datetime
 from odoo import models, fields, api, exceptions
 from odoo.exceptions import UserError
+from odoo.tools.image import image_data_uri
 import dateutil.parser
+import werkzeug
 import pytz
 
 
@@ -32,7 +34,8 @@ class OmnaIntegration(models.Model):
 
     @api.model
     def _current_tenant(self):
-        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
+        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)],
+                                                        limit=1)
         if current_tenant:
             return current_tenant.id
         else:
@@ -42,6 +45,7 @@ class OmnaIntegration(models.Model):
     name = fields.Char('Name', required=True)
     channel = fields.Selection(selection=_get_integrations_channel_selection, string='Channel', required=True)
     integration_id = fields.Char(string='Integration ID', required=True, index=True)
+    authorized = fields.Boolean('Authorized', required=True, default=False)
 
     @api.model
     def create(self, vals_list):
@@ -67,6 +71,27 @@ class OmnaIntegration(models.Model):
             response = rec.delete('integrations/%s' % rec.integration_id)
         return super(OmnaIntegration, self).unlink()
 
+    def unauthorize(self):
+        for integration in self:
+            self.delete('integrations/%s/authorize' % integration.integration_id)
+        return self.write({'authorized': False})
+
+    def authorize(self):
+        self.ensure_one()
+        omna_api_url = self.env['ir.config_parameter'].sudo().get_param(
+            "omna_odoo.cenit_url", default='https://cenit.io/app/ecapi-v1'
+        )
+        redirect = self.env['ir.config_parameter'].sudo().get_param(
+            'web.base.url') + '/omna/integrations/authorize/' + self.integration_id
+        path = 'integrations/%s/authorize' % self.integration_id
+        payload = self._sign_request(path, {'redirect_uri': redirect})
+        authorize_url = '%s/%s?%s' % (omna_api_url, path, werkzeug.urls.url_encode(payload))
+        return {
+            'type': 'ir.actions.act_url',
+            'url': authorize_url,
+            'target': 'self'
+        }
+
 
 class OmnaWebhook(models.Model):
     _name = 'omna.webhook'
@@ -86,7 +111,8 @@ class OmnaWebhook(models.Model):
 
     @api.model
     def _current_tenant(self):
-        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
+        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)],
+                                                        limit=1)
         if current_tenant:
             return current_tenant.id
         else:
@@ -163,7 +189,8 @@ class OmnaFlow(models.Model):
 
     @api.model
     def _current_tenant(self):
-        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
+        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)],
+                                                        limit=1)
         if current_tenant:
             return current_tenant.id
         else:
@@ -174,9 +201,12 @@ class OmnaFlow(models.Model):
     type = fields.Selection(selection=_get_flow_types, string='Type', required=True)
     start_date = fields.Datetime("Start Date", help='Select date and time')
     end_date = fields.Date("End Date")
-    days_of_week = fields.Many2many('omna.filters', 'omna_flow_days_of_week_rel', 'flow_id', 'days_of_week_id', domain=[('type', '=', 'dow')])
-    weeks_of_month = fields.Many2many('omna.filters', 'omna_flow_weeks_of_month_rel', 'flow_id', 'weeks_of_month_id', domain=[('type', '=', 'wom')])
-    months_of_year = fields.Many2many('omna.filters', 'omna_flow_months_of_year_rel', 'flow_id', 'months_of_year_id', domain=[('type', '=', 'moy')])
+    days_of_week = fields.Many2many('omna.filters', 'omna_flow_days_of_week_rel', 'flow_id', 'days_of_week_id',
+                                    domain=[('type', '=', 'dow')])
+    weeks_of_month = fields.Many2many('omna.filters', 'omna_flow_weeks_of_month_rel', 'flow_id', 'weeks_of_month_id',
+                                      domain=[('type', '=', 'wom')])
+    months_of_year = fields.Many2many('omna.filters', 'omna_flow_months_of_year_rel', 'flow_id', 'months_of_year_id',
+                                      domain=[('type', '=', 'moy')])
     omna_id = fields.Char('OMNA Workflow ID', index=True)
     active = fields.Boolean('Active', default=True, readonly=True)
 
@@ -199,19 +229,22 @@ class OmnaFlow(models.Model):
                 data['scheduler']['end_date'] = end_date.strftime("%Y-%m-%d")
             if 'days_of_week' in vals:
                 dow = []
-                days = self.env['omna.filters'].search([('type', '=', 'dow'), ('id', 'in', vals.get('days_of_week')[0][2])])
+                days = self.env['omna.filters'].search(
+                    [('type', '=', 'dow'), ('id', 'in', vals.get('days_of_week')[0][2])])
                 for day in days:
                     dow.append(day.name)
                 data['scheduler']['days_of_week'] = dow
             if 'weeks_of_month' in vals:
                 wom = []
-                weeks = self.env['omna.filters'].search([('type', '=', 'wom'), ('id', 'in', vals.get('weeks_of_month')[0][2])])
+                weeks = self.env['omna.filters'].search(
+                    [('type', '=', 'wom'), ('id', 'in', vals.get('weeks_of_month')[0][2])])
                 for week in weeks:
                     wom.append(week.name)
                 data['scheduler']['weeks_of_month'] = wom
             if 'months_of_year' in vals:
                 moy = []
-                months = self.env['omna.filters'].search([('type', '=', 'moy'), ('id', 'in', vals.get('months_of_year')[0][2])])
+                months = self.env['omna.filters'].search(
+                    [('type', '=', 'moy'), ('id', 'in', vals.get('months_of_year')[0][2])])
                 for month in months:
                     moy.append(month.name)
                 data['scheduler']['months_of_year'] = moy
@@ -229,9 +262,11 @@ class OmnaFlow(models.Model):
         self.ensure_one()
         if not self._context.get('synchronizing'):
             if 'type' in vals:
-                raise UserError("You cannot change the type of a worflow. Instead you should delete the current workflow and create a new one of the proper type.")
+                raise UserError(
+                    "You cannot change the type of a worflow. Instead you should delete the current workflow and create a new one of the proper type.")
             if 'integration_id' in vals:
-                raise UserError("You cannot change the integration of a worflow. Instead you should delete the current workflow and create a new one of the proper type.")
+                raise UserError(
+                    "You cannot change the integration of a worflow. Instead you should delete the current workflow and create a new one of the proper type.")
 
             data = {
                 "scheduler": {}
@@ -246,19 +281,22 @@ class OmnaFlow(models.Model):
                 data['scheduler']['end_date'] = end_date.strftime("%Y-%m-%d")
             if 'days_of_week' in vals:
                 dow = []
-                days = self.env['omna.filters'].search([('type', '=', 'dow'), ('id', 'in', vals.get('days_of_week')[0][2])])
+                days = self.env['omna.filters'].search(
+                    [('type', '=', 'dow'), ('id', 'in', vals.get('days_of_week')[0][2])])
                 for day in days:
                     dow.append(day.name)
                 data['scheduler']['days_of_week'] = dow
             if 'weeks_of_month' in vals:
                 wom = []
-                weeks = self.env['omna.filters'].search([('type', '=', 'wom'), ('id', 'in', vals.get('weeks_of_month')[0][2])])
+                weeks = self.env['omna.filters'].search(
+                    [('type', '=', 'wom'), ('id', 'in', vals.get('weeks_of_month')[0][2])])
                 for week in weeks:
                     wom.append(week.name)
                 data['scheduler']['weeks_of_month'] = wom
             if 'months_of_year' in vals:
                 moy = []
-                months = self.env['omna.filters'].search([('type', '=', 'moy'), ('id', 'in', vals.get('months_of_year')[0][2])])
+                months = self.env['omna.filters'].search(
+                    [('type', '=', 'moy'), ('id', 'in', vals.get('months_of_year')[0][2])])
                 for month in months:
                     moy.append(month.name)
                 data['scheduler']['months_of_year'] = moy
@@ -285,7 +323,8 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _current_tenant(self):
-        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
+        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)],
+                                                        limit=1)
         if current_tenant:
             return current_tenant.id
         else:
@@ -311,6 +350,9 @@ class ProductTemplate(models.Model):
                 'price': vals_list['list_price'],
                 'description': vals_list['description']
             }
+            # TODO Send image as data url to OMNA when supported
+            # if 'image_1920' in vals_list:
+            #     data['images'] = [image_data_uri(str(vals_list['image_1920']).encode('utf-8'))]
             response = self.post('products', {'data': data})
             if response.get('data').get('id'):
                 vals_list['omna_product_id'] = response.get('data').get('id')
@@ -323,12 +365,15 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         self.ensure_one()
         if not self._context.get('synchronizing'):
-            if 'name' in vals or 'list_price' in vals or 'description' in vals:
+            if 'name' in vals or 'list_price' in vals or 'description' in vals or 'image_1920' in vals:
                 data = {
                     'name': vals['name'] if 'name' in vals else self.name,
                     'price': vals['list_price'] if 'list_price' in vals else self.list_price,
                     'description': vals['description'] if 'description' in vals else (self.description or '')
                 }
+                # TODO Send image as data url to OMNA when supported
+                # if 'image_1920' in vals:
+                #     data['images'] = [image_data_uri(str(vals['image_1920']).encode('utf-8'))]
                 response = self.post('products/%s' % self.omna_product_id, {'data': data})
                 if response.get('data').get('id'):
                     vals['omna_product_id'] = response.get('data').get('id')
@@ -361,7 +406,7 @@ class ProductProduct(models.Model):
     variant_integration_ids = fields.Many2many('omna.integration', 'omna_product_integration_rel', 'product_id',
                                                'integration_id', 'Integrations')
 
-    # TODO Post variant to OMNA when functionality is available
+    # TODO Publish variant in OMNA when supported
     # @api.model
     # def create(self, vals_list):
     #     if not self._context.get('synchronizing'):
@@ -393,6 +438,9 @@ class ProductProduct(models.Model):
                     'sku': vals['default_code'] if 'default_code' in vals else self.default_code,
                     'cost_price': vals['standard_price'] if 'standard_price' in vals else self.standard_price
                 }
+                # TODO Send image as data url to OMNA when supported
+                # if 'image_1920' in vals:
+                #     data['images'] = [image_data_uri(str(vals['image_1920']).encode('utf-8'))]
                 response = self.post('products/%s/variants/%s' % (self.omna_product_id, self.omna_variant_id),
                                      {'data': data})
                 if response.get('data').get('id'):
@@ -415,7 +463,8 @@ class ProductProduct(models.Model):
                 "delete_from_integration": True,
                 "delete_from_omna": True
             }
-            response = rec.delete('products/%s/variants/%s' % (rec.omna_product_id, rec.omna_variant_id), {'data': data})
+            response = rec.delete('products/%s/variants/%s' % (rec.omna_product_id, rec.omna_variant_id),
+                                  {'data': data})
         return super(ProductProduct, self).unlink()
 
 
@@ -425,7 +474,8 @@ class SaleOrder(models.Model):
 
     @api.model
     def _current_tenant(self):
-        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
+        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)],
+                                                        limit=1)
         if current_tenant:
             return current_tenant.id
         else:
@@ -469,7 +519,8 @@ class OmnaTask(models.Model):
     _rec_name = 'description'
 
     status = fields.Selection(
-        [('pending', 'Pending'), ('running', 'Running'), ('completed', 'Completed'), ('failed', 'Failed'), ('retrying', 'Retrying')], 'Status',
+        [('pending', 'Pending'), ('running', 'Running'), ('completed', 'Completed'), ('failed', 'Failed'),
+         ('retrying', 'Retrying')], 'Status',
         required=True)
     description = fields.Text('Description', required=True)
     progress = fields.Float('Progress', required=True)
@@ -493,9 +544,11 @@ class OmnaTask(models.Model):
                 'description': data.get('description'),
                 'progress': float(data.get('progress')),
                 'task_created_at': fields.Datetime.to_string(
-                    dateutil.parser.parse(data.get('created_at'), tzinfos=tzinfos).astimezone(pytz.utc)) if data.get('created_at') else '',
+                    dateutil.parser.parse(data.get('created_at'), tzinfos=tzinfos).astimezone(pytz.utc)) if data.get(
+                    'created_at') else '',
                 'task_updated_at': fields.Datetime.to_string(
-                    dateutil.parser.parse(data.get('updated_at'), tzinfos=tzinfos).astimezone(pytz.utc)) if data.get('updated_at') else '',
+                    dateutil.parser.parse(data.get('updated_at'), tzinfos=tzinfos).astimezone(pytz.utc)) if data.get(
+                    'updated_at') else '',
                 'task_execution_ids': [],
                 'task_notification_ids': []
             }
@@ -503,9 +556,11 @@ class OmnaTask(models.Model):
                 res['task_execution_ids'].append((0, 0, {
                     'status': execution.get('status'),
                     'exec_started_at': fields.Datetime.to_string(
-                        dateutil.parser.parse(execution.get('started_at'), tzinfos=tzinfos).astimezone(pytz.utc)) if execution.get('started_at') else '',
+                        dateutil.parser.parse(execution.get('started_at'), tzinfos=tzinfos).astimezone(
+                            pytz.utc)) if execution.get('started_at') else '',
                     'exec_completed_at': fields.Datetime.to_string(
-                        dateutil.parser.parse(execution.get('completed_at'), tzinfos=tzinfos).astimezone(pytz.utc)) if execution.get('completed_at') else '',
+                        dateutil.parser.parse(execution.get('completed_at'), tzinfos=tzinfos).astimezone(
+                            pytz.utc)) if execution.get('completed_at') else '',
                 }))
             for notification in data.get('notifications', []):
                 res['task_notification_ids'].append((0, 0, {
@@ -637,7 +692,8 @@ class OmnaTenant(models.Model):
                 vals_list['secret'] = response.get('data').get('secret')
                 vals_list['is_ready_to_omna'] = response.get('data').get('is_ready_to_omna')
                 vals_list['deactivation'] = odoo.fields.Datetime.to_string(
-                            dateutil.parser.parse(response.get('data').get('deactivation'), tzinfos=tzinfos).astimezone(pytz.utc))
+                    dateutil.parser.parse(response.get('data').get('deactivation'), tzinfos=tzinfos).astimezone(
+                        pytz.utc))
                 return super(OmnaTenant, self).create(vals_list)
             else:
                 raise exceptions.AccessError("Error trying to push tenant to Omna's API.")
@@ -679,7 +735,8 @@ class OmnaCollection(models.Model):
 
     @api.model
     def _current_tenant(self):
-        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)], limit=1)
+        current_tenant = self.env['omna.tenant'].search([('id', '=', self.env.user.context_omna_current_tenant.id)],
+                                                        limit=1)
         if current_tenant:
             return current_tenant.id
         else:
@@ -736,7 +793,6 @@ class OmnaIntegrationChannel(models.Model):
             logo = '/omna/static/src/img/marketplace_placeholder.png'
         return logo
 
-
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         self.check_access_rights('read')
@@ -763,4 +819,3 @@ class OmnaIntegrationChannel(models.Model):
             'target': 'current',
             'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
         }
-
