@@ -697,7 +697,7 @@ class OmnaCollection(models.Model):
     omna_id = fields.Char('OMNA Collection id', readonly=True)
     shared_version = fields.Char('Shared Version', readonly=True)
     summary = fields.Text('Summary', readonly=True)
-    state = fields.Selection([('outdated', 'Outdated'), ('installed', 'Installed')], 'State', readonly=True)
+    state = fields.Selection([('not_installed', 'Not Installed'), ('outdated', 'Outdated'), ('installed', 'Installed')], 'State', readonly=True)
     updated_at = fields.Datetime('Updated At', readonly=True)
     installed_at = fields.Datetime('Installed At', readonly=True)
 
