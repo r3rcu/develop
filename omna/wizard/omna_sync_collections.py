@@ -46,7 +46,7 @@ class OmnaSyncCollections(models.TransientModel):
                         'updated_at': fields.Datetime.to_string(dateutil.parser.parse(collection.get('updated_at'), tzinfos=tzinfos).astimezone(pytz.utc)) if collection.get('updated_at') else '',
                         'installed_at': fields.Datetime.to_string(dateutil.parser.parse(collection.get('installed_at'), tzinfos=tzinfos).astimezone(pytz.utc)) if collection.get('installed_at') else ''
                     }
-                    act_collection.sudo().with_context(synchronizing=True).write(data)
+                    act_collection.with_context(synchronizing=True).write(data)
                 else:
                     data = {
                         'name': collection.get('name'),
@@ -58,11 +58,10 @@ class OmnaSyncCollections(models.TransientModel):
                         'updated_at': fields.Datetime.to_string(dateutil.parser.parse(collection.get('updated_at'), tzinfos=tzinfos).astimezone(pytz.utc)) if collection.get('updated_at') else '',
                         'installed_at': fields.Datetime.to_string(dateutil.parser.parse(collection.get('installed_at'), tzinfos=tzinfos).astimezone(pytz.utc)) if collection.get('installed_at') else ''
                     }
-                    act_collection = collection_obj.sudo().with_context(synchronizing=True).create(data)
+                    act_collection = collection_obj.with_context(synchronizing=True).create(data)
             return {
                 'type': 'ir.actions.client',
-                'tag': 'reload',
-                'params': {'menu_id': self.env.ref('omna.menu_omna_collections').id},
+                'tag': 'reload'
             }
         except Exception as e:
             _logger.error(e)

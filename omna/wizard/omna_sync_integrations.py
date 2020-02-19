@@ -52,8 +52,7 @@ class OmnaSyncIntegrations(models.TransientModel):
                     act_integration = integration_obj.with_context(synchronizing=True).create(data)
             return {
                 'type': 'ir.actions.client',
-                'tag': 'reload',
-                'params': {'menu_id': self.env.ref('omna.menu_omna_integration').id},
+                'tag': 'reload'
             }
         except Exception as e:
             _logger.error(e)

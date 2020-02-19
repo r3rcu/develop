@@ -22,8 +22,7 @@ class OmnaSyncProducts(models.TransientModel):
             self.import_products()
             return {
                 'type': 'ir.actions.client',
-                'tag': 'reload',
-                'params': {'menu_id': self.env.ref('omna.menu_omna_integration').id},
+                'tag': 'reload'
             }
         except Exception as e:
             _logger.error(e)
@@ -57,7 +56,13 @@ class OmnaSyncProducts(models.TransientModel):
                     url = product.get('images')[0]
                     if url:
                         image = base64.b64encode(requests.get(url.strip()).content).replace(b'\n', b'')
-                        data['image_1920'] = image
+                        data['image'] = image
+
+                if len(product.get('integrations')):
+                    integrations = []
+                    for integration in product.get('integrations'):
+                        integrations.append(integration.get('id'))
+                    data['integration_ids'] = self.env['omna.integration'].search([('integration_id', 'in', integrations)])
 
                 act_product.with_context(synchronizing=True).write(data)
                 self.import_variants(act_product.omna_product_id)
@@ -72,7 +77,14 @@ class OmnaSyncProducts(models.TransientModel):
                     url = product.get('images')[0]
                     if url:
                         image = base64.b64encode(requests.get(url.strip()).content).replace(b'\n', b'')
-                        data['image_1920'] = image
+                        data['image'] = image
+
+                if len(product.get('integrations')):
+                    integrations = []
+                    for integration in product.get('integrations'):
+                        integrations.append(integration.get('id'))
+                    data['integration_ids'] = self.env['omna.integration'].search([('integration_id', 'in', integrations)])
+
                 act_product = product_obj.with_context(synchronizing=True).create(data)
                 self.import_variants(act_product.omna_product_id)
 
@@ -108,7 +120,13 @@ class OmnaSyncProducts(models.TransientModel):
                     url = product.get('images')[0]
                     if url:
                         image = base64.b64encode(requests.get(url.strip()).content).replace(b'\n', b'')
-                        data['image_variant_1920'] = image
+                        data['image_variant'] = image
+
+                if len(product.get('integrations')):
+                    integrations = []
+                    for integration in product.get('integrations'):
+                        integrations.append(integration.get('id'))
+                    data['variant_integration_ids'] = self.env['omna.integration'].search([('integration_id', 'in', integrations)])
 
                 act_product.with_context(synchronizing=True).write(data)
             else:
@@ -125,5 +143,12 @@ class OmnaSyncProducts(models.TransientModel):
                     url = product.get('images')[0]
                     if url:
                         image = base64.b64encode(requests.get(url.strip()).content).replace(b'\n', b'')
-                        data['image_variant_1920'] = image
+                        data['image_variant'] = image
+
+                if len(product.get('integrations')):
+                    integrations = []
+                    for integration in product.get('integrations'):
+                        integrations.append(integration.get('id'))
+                    data['variant_integration_ids'] = self.env['omna.integration'].search([('integration_id', 'in', integrations)])
+
                 act_product = product_obj.with_context(synchronizing=True).create(data)

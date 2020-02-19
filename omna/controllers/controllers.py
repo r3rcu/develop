@@ -66,4 +66,4 @@ class Omna(http.Controller):
                 'params': {'menu_id': self.env.ref('omna.menu_omna_integration').id},
             }
         else:
-            raise exceptions.AccessError("Invalid integration id.")
+            raise exceptions.AccessError(_("Invalid integration id."))

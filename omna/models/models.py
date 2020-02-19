@@ -2,7 +2,7 @@
 
 import odoo
 import datetime
-from odoo import models, fields, api, exceptions
+from odoo import models, fields, api, exceptions, tools
 from odoo.exceptions import UserError
 from odoo.tools.image import image_data_uri
 import dateutil.parser
@@ -19,7 +19,7 @@ def omna_id2real_id(omna_id):
 
 class OmnaIntegration(models.Model):
     _name = 'omna.integration'
-    _inherit = ['omna.api', 'image.mixin']
+    _inherit = ['omna.api']
 
     @api.model
     def _get_integrations_channel_selection(self):
@@ -46,9 +46,24 @@ class OmnaIntegration(models.Model):
     channel = fields.Selection(selection=_get_integrations_channel_selection, string='Channel', required=True)
     integration_id = fields.Char(string='Integration ID', required=True, index=True)
     authorized = fields.Boolean('Authorized', required=True, default=False)
+    # image: all image fields are base64 encoded and PIL-supported
+    image = fields.Binary(
+        "Image", attachment=True,
+        help="This field holds the image used as image for the product, limited to 1024x1024px.")
+    image_medium = fields.Binary(
+        "Medium-sized image", attachment=True,
+        help="Medium-sized image of the product. It is automatically "
+             "resized as a 128x128px image, with aspect ratio preserved, "
+             "only when the image exceeds one of those sizes. Use this field in form views or some kanban views.")
+    image_small = fields.Binary(
+        "Small-sized image", attachment=True,
+        help="Small-sized image of the product. It is automatically "
+             "resized as a 64x64px image, with aspect ratio preserved. "
+             "Use this field anywhere a small image is required.")
 
     @api.model
     def create(self, vals_list):
+        tools.image_resize_images(vals_list)
         if not self._context.get('synchronizing'):
             self.check_access_rights('create')
             data = {
@@ -60,9 +75,14 @@ class OmnaIntegration(models.Model):
                 vals_list['integration_id'] = response.get('data').get('id')
                 return super(OmnaIntegration, self).create(vals_list)
             else:
-                raise exceptions.AccessError("Error trying to push integration to Omna's API.")
+                raise exceptions.AccessError(_("Error trying to push integration to Omna's API."))
         else:
             return super(OmnaIntegration, self).create(vals_list)
+
+    @api.multi
+    def write(self, vals):
+        tools.image_resize_images(vals)
+        return super(OmnaIntegration, self).write(vals)
 
     def unlink(self):
         self.check_access_rights('unlink')
@@ -138,7 +158,7 @@ class OmnaWebhook(models.Model):
                 vals_list['omna_webhook_id'] = response.get('data').get('id')
                 return super(OmnaWebhook, self).create(vals_list)
             else:
-                raise exceptions.AccessError("Error trying to push webhook to Omna's API.")
+                raise exceptions.AccessError(_("Error trying to push webhook to Omna's API."))
         else:
             return super(OmnaWebhook, self).create(vals_list)
 
@@ -159,7 +179,7 @@ class OmnaWebhook(models.Model):
                 vals['omna_webhook_id'] = response.get('data').get('id')
                 return super(OmnaWebhook, self).write(vals)
             else:
-                raise exceptions.AccessError("Error trying to update webhook in Omna's API.")
+                raise exceptions.AccessError(_("Error trying to update webhook in Omna's API."))
         else:
             return super(OmnaWebhook, self).write(vals)
 
@@ -254,7 +274,7 @@ class OmnaFlow(models.Model):
                 vals['omna_id'] = response.get('data').get('id')
                 return super(OmnaFlow, self).create(vals)
             else:
-                raise exceptions.AccessError("Error trying to push the workflow to Omna.")
+                raise exceptions.AccessError(_("Error trying to push the workflow to Omna."))
         else:
             return super(OmnaFlow, self).create(vals)
 
@@ -305,7 +325,7 @@ class OmnaFlow(models.Model):
             if 'id' in response.get('data'):
                 return super(OmnaFlow, self).write(vals)
             else:
-                raise exceptions.AccessError("Error trying to update the workflow in Omna.")
+                raise exceptions.AccessError(_("Error trying to update the workflow in Omna."))
         else:
             return super(OmnaFlow, self).write(vals)
 
@@ -351,35 +371,35 @@ class ProductTemplate(models.Model):
                 'description': vals_list['description']
             }
             # TODO Send image as data url to OMNA when supported
-            # if 'image_1920' in vals_list:
-            #     data['images'] = [image_data_uri(str(vals_list['image_1920']).encode('utf-8'))]
+            # if 'image' in vals_list:
+            #     data['images'] = [image_data_uri(str(vals_list['image']).encode('utf-8'))]
             response = self.post('products', {'data': data})
             if response.get('data').get('id'):
                 vals_list['omna_product_id'] = response.get('data').get('id')
                 return super(ProductTemplate, self).create(vals_list)
             else:
-                raise exceptions.AccessError("Error trying to push product to Omna's API.")
+                raise exceptions.AccessError(_("Error trying to push product to Omna's API."))
         else:
             return super(ProductTemplate, self).create(vals_list)
 
     def write(self, vals):
         self.ensure_one()
         if not self._context.get('synchronizing'):
-            if 'name' in vals or 'list_price' in vals or 'description' in vals or 'image_1920' in vals:
+            if 'name' in vals or 'list_price' in vals or 'description' in vals or 'image' in vals:
                 data = {
                     'name': vals['name'] if 'name' in vals else self.name,
                     'price': vals['list_price'] if 'list_price' in vals else self.list_price,
                     'description': vals['description'] if 'description' in vals else (self.description or '')
                 }
                 # TODO Send image as data url to OMNA when supported
-                # if 'image_1920' in vals:
-                #     data['images'] = [image_data_uri(str(vals['image_1920']).encode('utf-8'))]
+                # if 'image' in vals:
+                #     data['images'] = [image_data_uri(str(vals['image']).encode('utf-8'))]
                 response = self.post('products/%s' % self.omna_product_id, {'data': data})
                 if response.get('data').get('id'):
                     vals['omna_product_id'] = response.get('data').get('id')
                     return super(ProductTemplate, self).write(vals)
                 else:
-                    raise exceptions.AccessError("Error trying to update product in Omna's API.")
+                    raise exceptions.AccessError(_("Error trying to update product in Omna's API."))
             else:
                 return super(ProductTemplate, self).write(vals)
         else:
@@ -439,15 +459,15 @@ class ProductProduct(models.Model):
                     'cost_price': vals['standard_price'] if 'standard_price' in vals else self.standard_price
                 }
                 # TODO Send image as data url to OMNA when supported
-                # if 'image_1920' in vals:
-                #     data['images'] = [image_data_uri(str(vals['image_1920']).encode('utf-8'))]
+                # if 'image' in vals:
+                #     data['images'] = [image_data_uri(str(vals['image']).encode('utf-8'))]
                 response = self.post('products/%s/variants/%s' % (self.omna_product_id, self.omna_variant_id),
                                      {'data': data})
                 if response.get('data').get('id'):
                     vals['omna_variant_id'] = response.get('data').get('id')
                     return super(ProductProduct, self).write(vals)
                 else:
-                    raise exceptions.AccessError("Error trying to update product variant in Omna's API.")
+                    raise exceptions.AccessError(_("Error trying to update product variant in Omna's API."))
             else:
                 return super(ProductProduct, self).write(vals)
         else:
@@ -658,77 +678,6 @@ class OmnaTaskNotification(models.Model):
     task_id = fields.Many2one('omna.task', string='Task')
 
 
-class OmnaTenant(models.Model):
-    _name = 'omna.tenant'
-    _inherit = 'omna.api'
-
-    name = fields.Char('Name', required=True)
-    omna_tenant_id = fields.Char('Tenant identifier in OMNA', index=True, readonly=True)
-    token = fields.Char('Token', required=True, readonly=True)
-    secret = fields.Char('Secret', required=True, readonly=True)
-    is_ready_to_omna = fields.Boolean('Is ready to OMNA', readonly=True)
-    deactivation = fields.Datetime('Deactivation', readonly=True)
-
-    def _compute_current(self):
-        for record in self:
-            record.current = self.env.user.context_omna_current_tenant.id == record.id
-
-    current = fields.Boolean('Current Tenant', default=False, invisible=True, compute=_compute_current)
-
-    @api.model
-    def create(self, vals_list):
-        if not self._context.get('synchronizing'):
-            data = {
-                'name': vals_list['name']
-            }
-            response = self.post('tenants', {'data': data})
-            tzinfos = {
-                'PST': -8 * 3600,
-                'PDT': -7 * 3600,
-            }
-            if response.get('data').get('id'):
-                vals_list['omna_tenant_id'] = response.get('data').get('id')
-                vals_list['token'] = response.get('data').get('token')
-                vals_list['secret'] = response.get('data').get('secret')
-                vals_list['is_ready_to_omna'] = response.get('data').get('is_ready_to_omna')
-                vals_list['deactivation'] = odoo.fields.Datetime.to_string(
-                    dateutil.parser.parse(response.get('data').get('deactivation'), tzinfos=tzinfos).astimezone(
-                        pytz.utc))
-                return super(OmnaTenant, self).create(vals_list)
-            else:
-                raise exceptions.AccessError("Error trying to push tenant to Omna's API.")
-        else:
-            return super(OmnaTenant, self).create(vals_list)
-
-    def unlink(self):
-        self.check_access_rights('unlink')
-        self.check_access_rule('unlink')
-        for rec in self:
-            response = rec.delete('tenants/%s' % rec.omna_tenant_id)
-        return super(OmnaTenant, self).unlink()
-
-    @api.model
-    def _switch(self):
-        self.ensure_one()
-        self.env.user.context_omna_current_tenant = self.id
-        return True
-
-    def switch(self):
-        self._switch()
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload'
-        }
-
-    @api.model
-    def switch_action(self, id):
-        tenant = self.browse(id)
-        if tenant:
-            return tenant._switch()
-        else:
-            return False
-
-
 class OmnaCollection(models.Model):
     _name = 'omna.collection'
     _inherit = 'omna.api'
@@ -743,14 +692,14 @@ class OmnaCollection(models.Model):
             return None
 
     omna_tenant_id = fields.Many2one('omna.tenant', 'Tenant', required=True, default=_current_tenant)
-    name = fields.Char('Name', required=True)
-    title = fields.Char('Title', required=True)
-    omna_id = fields.Char('OMNA Collection id')
-    shared_version = fields.Char('Shared Version')
-    summary = fields.Text('Summary')
-    state = fields.Selection([('outdated', 'Outdated'), ('installed', 'Installed')], 'State')
-    updated_at = fields.Datetime('Updated At')
-    installed_at = fields.Datetime('Installed At')
+    name = fields.Char('Name', required=True, readonly=True)
+    title = fields.Char('Title', required=True, readonly=True)
+    omna_id = fields.Char('OMNA Collection id', readonly=True)
+    shared_version = fields.Char('Shared Version', readonly=True)
+    summary = fields.Text('Summary', readonly=True)
+    state = fields.Selection([('outdated', 'Outdated'), ('installed', 'Installed')], 'State', readonly=True)
+    updated_at = fields.Datetime('Updated At', readonly=True)
+    installed_at = fields.Datetime('Installed At', readonly=True)
 
     def install_collection(self):
         self.ensure_one()
