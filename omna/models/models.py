@@ -565,10 +565,10 @@ class OmnaTask(models.Model):
                 'progress': float(data.get('progress')),
                 'task_created_at': fields.Datetime.to_string(
                     dateutil.parser.parse(data.get('created_at'), tzinfos=tzinfos).astimezone(pytz.utc)) if data.get(
-                    'created_at') else '',
+                    'created_at') else None,
                 'task_updated_at': fields.Datetime.to_string(
                     dateutil.parser.parse(data.get('updated_at'), tzinfos=tzinfos).astimezone(pytz.utc)) if data.get(
-                    'updated_at') else '',
+                    'updated_at') else None,
                 'task_execution_ids': [],
                 'task_notification_ids': []
             }
@@ -577,10 +577,10 @@ class OmnaTask(models.Model):
                     'status': execution.get('status'),
                     'exec_started_at': fields.Datetime.to_string(
                         dateutil.parser.parse(execution.get('started_at'), tzinfos=tzinfos).astimezone(
-                            pytz.utc)) if execution.get('started_at') else '',
+                            pytz.utc)) if execution.get('started_at') else None,
                     'exec_completed_at': fields.Datetime.to_string(
                         dateutil.parser.parse(execution.get('completed_at'), tzinfos=tzinfos).astimezone(
-                            pytz.utc)) if execution.get('completed_at') else '',
+                            pytz.utc)) if execution.get('completed_at') else None,
                 }))
             for notification in data.get('notifications', []):
                 res['task_notification_ids'].append((0, 0, {
