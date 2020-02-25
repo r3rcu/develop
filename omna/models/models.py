@@ -230,6 +230,16 @@ class OmnaFlow(models.Model):
     omna_id = fields.Char('OMNA Workflow ID', index=True)
     active = fields.Boolean('Active', default=True, readonly=True)
 
+    def start(self):
+        for flow in self:
+            self.get('flows/%s/start' % flow.omna_id, {})
+        return {'type': 'ir.actions.act_window_close'}
+
+    def toggle_status(self):
+        for flow in self:
+            self.get('flows/%s/toggle/scheduler/status' % flow.omna_id, {})
+        return {'type': 'ir.actions.act_window_close'}
+
     @api.model
     def create(self, vals):
         if not self._context.get('synchronizing'):
@@ -501,7 +511,7 @@ class SaleOrder(models.Model):
         else:
             return None
 
-    omna_tenant_id = fields.Many2one('omna.tenant', 'Tenant', required=True, default=_current_tenant)
+    omna_tenant_id = fields.Many2one('omna.tenant', 'Tenant', default=_current_tenant)
     omna_id = fields.Char("OMNA Order ID", index=True)
     integration_id = fields.Many2one('omna.integration', 'OMNA Integration')
 

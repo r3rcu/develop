@@ -65,7 +65,10 @@ class OmnaSyncProducts(models.TransientModel):
                     data['integration_ids'] = self.env['omna.integration'].search([('integration_id', 'in', integrations)])
 
                 act_product.with_context(synchronizing=True).write(data)
-                self.import_variants(act_product.omna_product_id)
+                try:
+                    self.import_variants(act_product.omna_product_id)
+                except Exception as e:
+                    _logger.error(e)
             else:
                 data = {
                     'name': product.get('name'),
@@ -86,7 +89,10 @@ class OmnaSyncProducts(models.TransientModel):
                     data['integration_ids'] = self.env['omna.integration'].search([('integration_id', 'in', integrations)])
 
                 act_product = product_obj.with_context(synchronizing=True).create(data)
-                self.import_variants(act_product.omna_product_id)
+                try:
+                    self.import_variants(act_product.omna_product_id)
+                except Exception as e:
+                    _logger.error(e)
 
     def import_variants(self, product_id):
         limit = 100
