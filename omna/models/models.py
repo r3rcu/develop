@@ -2,7 +2,7 @@
 
 import odoo
 import datetime
-from odoo import models, fields, api, exceptions, tools
+from odoo import models, fields, api, exceptions, tools, _
 from odoo.exceptions import UserError
 from odoo.tools.image import image_data_uri
 import dateutil.parser
@@ -233,11 +233,14 @@ class OmnaFlow(models.Model):
     def start(self):
         for flow in self:
             self.get('flows/%s/start' % flow.omna_id, {})
+        self.env.user.notify_channel('warning', _('The task to execute the workflow have been created, please go to "System\Tasks" to check out the task status.'), _("Information"), True)
         return {'type': 'ir.actions.act_window_close'}
 
     def toggle_status(self):
         for flow in self:
             self.get('flows/%s/toggle/scheduler/status' % flow.omna_id, {})
+
+        self.env.user.notify_channel('warning', _('The workflow\'s status have been changed.'), _("Information"), True)
         return {'type': 'ir.actions.act_window_close'}
 
     @api.model
@@ -714,12 +717,14 @@ class OmnaCollection(models.Model):
     def install_collection(self):
         self.ensure_one()
         self.patch('collections/%s' % self.omna_id, {})
-        return True
+        self.env.user.notify_channel('warning', _('The task to install the collection have been created, please go to "System\Tasks" to check out the task status.'), _("Information"), True)
+        return {'type': 'ir.actions.act_window_close'}
 
     def uninstall_collection(self):
         self.ensure_one()
         self.delete('collections/%s' % self.omna_id, {})
-        return True
+        self.env.user.notify_channel('warning', _('The task to uninstall the collection have been created, please go to "System\Tasks" to check out the task status.'), _("Information"), True)
+        return {'type': 'ir.actions.act_window_close'}
 
 
 class OmnaIntegrationChannel(models.Model):
