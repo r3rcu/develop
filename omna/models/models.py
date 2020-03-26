@@ -24,7 +24,7 @@ class OmnaIntegration(models.Model):
     @api.model
     def _get_integrations_channel_selection(self):
         try:
-            response = self.get('integrations/channels', {})
+            response = self.get('available/integrations/channels', {})
             selection = []
             for channel in response.get('data'):
                 selection.append((channel.get('name'), channel.get('title')))
@@ -716,13 +716,13 @@ class OmnaCollection(models.Model):
 
     def install_collection(self):
         self.ensure_one()
-        self.patch('collections/%s' % self.omna_id, {})
+        self.patch('available/integrations/%s' % self.omna_id, {})
         self.env.user.notify_channel('warning', _('The task to install the collection have been created, please go to "System\Tasks" to check out the task status.'), _("Information"), True)
         return {'type': 'ir.actions.act_window_close'}
 
     def uninstall_collection(self):
         self.ensure_one()
-        self.delete('collections/%s' % self.omna_id, {})
+        self.delete('available/integrations/%s' % self.omna_id, {})
         self.env.user.notify_channel('warning', _('The task to uninstall the collection have been created, please go to "System\Tasks" to check out the task status.'), _("Information"), True)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -762,7 +762,7 @@ class OmnaIntegrationChannel(models.Model):
         self.check_access_rights('read')
         fields = self.check_field_access_rights('read', fields)
         result = []
-        channels = self.get('integrations/channels', {})
+        channels = self.get('available/integrations/channels', {})
         for channel in channels.get('data'):
             res = {
                 'id': '1-' + channel.get('name'),  # amazing hack needed to open records with virtual ids

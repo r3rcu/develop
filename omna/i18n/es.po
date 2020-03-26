@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0+e-20190903\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-13 12:04+0000\n"
-"PO-Revision-Date: 2020-03-13 08:38-0500\n"
+"POT-Creation-Date: 2020-03-26 03:21+0000\n"
+"PO-Revision-Date: 2020-03-25 23:32-0500\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -136,12 +136,12 @@ msgstr "Etiquetas analíticas"
 #: model_terms:ir.ui.view,arch_db:omna.view_omna_settings
 #: model_terms:ir.ui.view,arch_db:omna.wizard_omna_sign_in_install
 msgid "Apply"
-msgstr "Aplicar"
+msgstr "Solicitar"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_account_asset
 msgid "Assets Management"
-msgstr ""
+msgstr "Gestión de activos fijos"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_voip
@@ -171,12 +171,12 @@ msgstr ""
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_account_invoice_extract
 msgid "Automate Bill Processing"
-msgstr ""
+msgstr "Automatizar Proceso de Factura"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_currency_rate_live
 msgid "Automatic Currency Rates"
-msgstr "Tasa de Cambio Automática"
+msgstr "Taza de Cambio Automática"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__automatic_invoice
@@ -184,9 +184,22 @@ msgid "Automatic Invoice"
 msgstr "Factura automática"
 
 #. module: omna
+#: model_terms:ir.ui.view,arch_db:omna.omna_collection_form_view
+#: model_terms:ir.ui.view,arch_db:omna.omna_collection_search_view
+#: model_terms:ir.ui.view,arch_db:omna.omna_collection_tree_view
+msgid "Available Integration"
+msgstr "Integración Disponible"
+
+#. module: omna
 #: model:ir.actions.act_window,name:omna.action_omna_integration_channel
 #: model:ir.ui.menu,name:omna.menu_omna_my_integration_channels
 #: model_terms:ir.ui.view,arch_db:omna.omna_integration_channel_tree_view
+msgid "Available Integration Channels"
+msgstr "Canales de Integración Disponibles"
+
+#. module: omna
+#: model:ir.actions.act_window,name:omna.action_omna_collection
+#: model:ir.ui.menu,name:omna.menu_omna_collections
 msgid "Available Integrations"
 msgstr "Integraciones Disponibles"
 
@@ -228,7 +241,7 @@ msgstr "Cancelar"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__tax_exigibility
 msgid "Cash Basis"
-msgstr "Base del Efectivo"
+msgstr "Base de Efectivo"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_cash_rounding
@@ -238,7 +251,7 @@ msgstr "Redondeo de efectivo"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__cenit_url
 msgid "Cenit URL"
-msgstr ""
+msgstr "Cenit URL"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_integration__channel
@@ -254,19 +267,6 @@ msgstr "Código para obtener token de acceso a OMNA"
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_pad
 msgid "Collaborative Pads"
 msgstr "Pads colaborativos"
-
-#. module: omna
-#: model_terms:ir.ui.view,arch_db:omna.omna_collection_form_view
-msgid "Collection"
-msgstr "Colección"
-
-#. module: omna
-#: model:ir.actions.act_window,name:omna.action_omna_collection
-#: model:ir.ui.menu,name:omna.menu_omna_collections
-#: model_terms:ir.ui.view,arch_db:omna.omna_collection_search_view
-#: model_terms:ir.ui.view,arch_db:omna.omna_collection_tree_view
-msgid "Collections"
-msgstr "Colecciones"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__invoice_reference_type
@@ -458,7 +458,7 @@ msgstr "Validez de presupuesto por defecto (Días)"
 #. module: omna
 #: model:ir.model.fields,help:omna.field_omna_settings__invoice_reference_type
 msgid "Default Reference Type on Invoices."
-msgstr ""
+msgstr "Tipo de Referencia por defecto en facturas."
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__sale_tax_id
@@ -473,7 +473,7 @@ msgstr "Plantilla predeterminada"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__use_sale_note
 msgid "Default Terms & Conditions"
-msgstr ""
+msgstr "Términos y condiciones predeterminados"
 
 #. module: omna
 #: model:ir.model.fields,help:omna.field_omna_settings__deposit_default_product_id
@@ -488,7 +488,7 @@ msgstr "Eliminar"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_sale_order_dates
 msgid "Delivery Date"
-msgstr ""
+msgstr "Fecha de entrega"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__deposit_default_product_id
@@ -518,7 +518,7 @@ msgstr "Contenido Digital"
 #. module: omna
 #: model:ir.model.fields,help:omna.field_omna_settings__group_products_in_bills
 msgid "Disable this option to use a simplified versions of vendor bills, where products are hidden."
-msgstr ""
+msgstr "Desactive esta opción para usar versiones simplificadas de facturas de proveedores, donde los productos están ocultos."
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_discount_per_so_line
@@ -596,12 +596,12 @@ msgstr "Habilitar restablecimiento de la contraseña desde la página de inicio 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_flow__end_date
 msgid "End Date"
-msgstr "Fecha final"
+msgstr "Fecha finalización"
 
 #. module: omna
 #: selection:omna.task.notification,type:0
 msgid "Error"
-msgstr "Error"
+msgstr ""
 
 #. module: omna
 #: code:addons/omna/models/omna_api.py:51
@@ -717,7 +717,7 @@ msgstr "Flujo"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_account_reports_followup
 msgid "Follow-up Levels"
-msgstr ""
+msgstr "Niveles de seguimiento"
 
 #. module: omna
 #: model:ir.model.fields,help:omna.field_omna_settings__report_footer
@@ -782,6 +782,11 @@ msgid "Image"
 msgstr "Imagen"
 
 #. module: omna
+#: model_terms:ir.ui.view,arch_db:omna.view_sync_collections_wizard
+msgid "Import"
+msgstr "Importar"
+
+#. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_account_bank_statement_import_qif
 msgid "Import .qif files"
 msgstr "Importar archivos .qif"
@@ -790,8 +795,8 @@ msgstr "Importar archivos .qif"
 #: model:ir.actions.act_window,name:omna.action_sync_collections_wizard
 #: model:ir.ui.menu,name:omna.menu_omna_sync_collections
 #: model_terms:ir.ui.view,arch_db:omna.view_sync_collections_wizard
-msgid "Import Collections"
-msgstr "Importar Colecciones"
+msgid "Import Available Integrations"
+msgstr "Importar Integraciones Disponibles"
 
 #. module: omna
 #: model:ir.actions.act_window,name:omna.action_sync_integrations_wizard
@@ -861,7 +866,7 @@ msgstr "Importar flujos de trabajo"
 #. module: omna
 #: selection:omna.task.notification,type:0
 msgid "Info"
-msgstr "Info"
+msgstr ""
 
 #. module: omna
 #: code:addons/omna/models/models.py:236 code:addons/omna/models/models.py:243
@@ -872,8 +877,8 @@ msgstr "Información"
 
 #. module: omna
 #: model_terms:ir.ui.view,arch_db:omna.omna_collection_form_view
-msgid "Install Collection"
-msgstr "Instalar Colección"
+msgid "Install"
+msgstr "Instalar"
 
 #. module: omna
 #: selection:omna.collection,state:0
@@ -935,7 +940,7 @@ msgstr "Integraciones"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__currency_interval_unit
 msgid "Interval Unit"
-msgstr ""
+msgstr "Unidad de intervalo"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_account_intrastat
@@ -1013,7 +1018,7 @@ msgstr "Última modificación en"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__last_currency_sync_date
 msgid "Last Sync Date"
-msgstr ""
+msgstr "Última fecha de sincronización"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_action_start_workflows_wizard__write_uid
@@ -1073,7 +1078,7 @@ msgstr "Visualización de Impuestos en Subtotales de Línea"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__auto_done_setting
 msgid "Lock Confirmed Sales"
-msgstr ""
+msgstr "Bloquear pedidos confirmados"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_integration_channel__logo
@@ -1093,7 +1098,7 @@ msgstr "Gestionar operaciones inter-compañías"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_multi_company
 msgid "Manage multiple companies"
-msgstr ""
+msgstr "Gestionar varias compañías"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_sale_margin
@@ -1103,12 +1108,12 @@ msgstr "Márgenes"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_integration__image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Imagen de tamaño mediano"
 
 #. module: omna
 #: model:ir.model.fields,help:omna.field_omna_integration__image_medium
 msgid "Medium-sized image of the product. It is automatically resized as a 128x128px image, with aspect ratio preserved, only when the image exceeds one of those sizes. Use this field in form views or some kanban views."
-msgstr ""
+msgstr "Imagen mediana del producto. Se redimensionará automáticamente a 128x128p px, preservando el ratio de aspecto, sólo cuando la imagen exceda uno de esos tamaños. Este campo se usa en las vistas de formulario y en algunas vistas kanban."
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_task_notification__message
@@ -1128,7 +1133,7 @@ msgstr "Multi-Monedas"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__multi_sales_price
 msgid "Multiple Sales Prices per Product"
-msgstr ""
+msgstr "Múltiples precios de venta por producto"
 
 #. module: omna
 #: selection:omna.settings,multi_sales_price_method:0
@@ -1140,7 +1145,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:omna.action_omna_integration
 #: model:ir.ui.menu,name:omna.menu_omna_my_integrations
 msgid "My Integrations"
-msgstr ""
+msgstr "Mis Integraciones"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_collection__name
@@ -1154,7 +1159,7 @@ msgstr "Nombre"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__currency_next_execution_date
 msgid "Next Execution Date"
-msgstr ""
+msgstr "Siguiente fecha de ejecución"
 
 #. module: omna
 #: selection:omna.collection,state:0
@@ -1197,12 +1202,12 @@ msgstr ""
 #: code:addons/omna/static/src/xml/systray.xml:11
 #, python-format
 msgid "OMNA"
-msgstr ""
+msgstr "OMNA"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_signin_settings__cenit_url
 msgid "OMNA API URL"
-msgstr ""
+msgstr "OMNA API URL"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_collection__omna_id
@@ -1313,7 +1318,7 @@ msgstr "Pedidos"
 #. module: omna
 #: selection:omna.collection,state:0
 msgid "Outdated"
-msgstr ""
+msgstr "Desactualizada"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__paperformat_id
@@ -1323,7 +1328,7 @@ msgstr "Formato de papel"
 #. module: omna
 #: selection:omna.task,status:0 selection:omna.task.execution,status:0
 msgid "Pending"
-msgstr ""
+msgstr "Pendiente"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_account_plaid
@@ -1354,7 +1359,7 @@ msgstr "Tarifas"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__multi_sales_price_method
 msgid "Pricelists Method"
-msgstr ""
+msgstr "Método de Tarifas"
 
 #. module: omna
 #: selection:omna.settings,multi_sales_price_method:0
@@ -1434,7 +1439,7 @@ msgstr "Publicar Producto"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__ocn_push_notification
 msgid "Push Notifications"
-msgstr "Enviar Notificaciones"
+msgstr "Notificaciones automáticas"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_sale_quotation_builder
@@ -1454,17 +1459,17 @@ msgstr "Reintentar"
 #. module: omna
 #: selection:omna.task,status:0
 msgid "Retrying"
-msgstr ""
+msgstr "Reintentando"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_account_deferred_revenue
 msgid "Revenue Recognition"
-msgstr ""
+msgstr "Reconocimiento de Ingresos"
 
 #. module: omna
 #: selection:omna.task,status:0 selection:omna.task.execution,status:0
 msgid "Running"
-msgstr ""
+msgstr "Ejecutándose"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_account_sepa
@@ -1474,7 +1479,7 @@ msgstr "Transferencia SEPA de crédito (SCT)"
 #. module: omna
 #: model:ir.model,name:omna.model_sale_order
 msgid "Sale Order"
-msgstr ""
+msgstr "Pedido de venta"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_warning_sale
@@ -1520,7 +1525,7 @@ msgstr ""
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__currency_provider
 msgid "Service Provider"
-msgstr ""
+msgstr "Proveedor de servicio"
 
 #. module: omna
 #: model_terms:ir.ui.view,arch_db:omna.omna_tenant_form_view
@@ -1543,12 +1548,12 @@ msgstr "Ajustes"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__company_share_partner
 msgid "Share partners to all companies"
-msgstr ""
+msgstr "Compartir empresas para todas las compañías"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__company_share_product
 msgid "Share product to all companies"
-msgstr ""
+msgstr "Compartir producto a todas las empresas"
 
 #. module: omna
 #: model:ir.model.fields,help:omna.field_omna_settings__company_share_partner
@@ -1557,6 +1562,9 @@ msgid ""
 " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
 msgstr ""
+"Comparta sus empresas entre todas las compañías definidas en su instancia.\n"
+"* Marcado: Las empresas son visibles para todas las compañías, incluso si se define una compañía en la empresa.\n"
+"* Desmarcado: Cada compañía podrá ver solo sus empresas (empresas en las que la compañía está definida). Las empresas sin compañía establecida serán visibles para todas las compañías."
 
 #. module: omna
 #: model:ir.model.fields,help:omna.field_omna_settings__company_share_product
@@ -1565,11 +1573,14 @@ msgid ""
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
 msgstr ""
+"Comparte su producto a todas las empresas definidas en su instance.\n"
+"* Marcada: Producto son visibles para todas las empresas , incluso si una empresa se ​​define en el partner.\n"
+"* Desactivada: Cada empresa sólo puede ver su producto ( producto donde la empresa se ​​define ). Producto no relacionado con una empresa son visibles para todas las empresas."
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_collection__shared_version
 msgid "Shared Version"
-msgstr ""
+msgstr "Versión Compartida"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_delivery
@@ -1594,12 +1605,12 @@ msgstr "Mostrar subtotales de línea sin impuestos (B2B)"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr ""
+msgstr "Mostrar tarifas en productos"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr ""
+msgstr "Mostrar tarifas a los clientes"
 
 #. module: omna
 #: model:ir.actions.act_window,name:omna.action_wizard_omna_sign_in_install
@@ -1610,12 +1621,12 @@ msgstr "Iniciar session con OMNA"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_integration__image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "Imagen de tamaño pequeño"
 
 #. module: omna
 #: model:ir.model.fields,help:omna.field_omna_integration__image_small
 msgid "Small-sized image of the product. It is automatically resized as a 64x64px image, with aspect ratio preserved. Use this field anywhere a small image is required."
-msgstr ""
+msgstr "Imagen pequeña del producto. Se redimensiona automáticamente a 64x64 px, preservando el ratio de aspecto. Use este campo siempre que se requiera una imagen pequeña."
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__module_product_email_template
@@ -1658,7 +1669,7 @@ msgstr "Estado"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_collection__summary
 msgid "Summary"
-msgstr ""
+msgstr "Resumen"
 
 #. module: omna
 #: model:ir.ui.menu,name:omna.menu_omna_system
@@ -1737,7 +1748,7 @@ msgstr "Inquilinos"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__sale_note
 msgid "Terms & Conditions"
-msgstr ""
+msgstr "Términos y condiciones"
 
 #. module: omna
 #: model:ir.model.fields,help:omna.field_omna_settings__currency_exchange_journal_id
@@ -1780,19 +1791,19 @@ msgstr "Los flujos marcados comenzarán su procesamiento"
 #: code:addons/omna/models/models.py:236
 #, python-format
 msgid "The task to execute the workflow have been created, please go to \"System\\Tasks\" to check out the task status."
-msgstr ""
+msgstr "La tarea para la ejecución del flujo de trabajo ha sido creada, por favor vaya a \"Sistema\\Tareas\" para verificar el estado de la misma."
 
 #. module: omna
 #: code:addons/omna/models/models.py:720
 #, python-format
 msgid "The task to install the collection have been created, please go to \"System\\Tasks\" to check out the task status."
-msgstr ""
+msgstr "La tarea para instalar la colección ha sido creada, por favor vaya a \"Sistema\\Tareas\" para verificar el estado de la misma."
 
 #. module: omna
 #: code:addons/omna/models/models.py:726
 #, python-format
 msgid "The task to uninstall the collection have been created, please go to \"System\\Tasks\" to check out the task status."
-msgstr ""
+msgstr "La tarea para desinstalar la colección ha sido creada, por favor vaya a \"Sistema\\Tareas\" para verificar el estado de la misma."
 
 #. module: omna
 #: model:res.groups,comment:omna.group_omna_manager
@@ -1819,7 +1830,7 @@ msgstr ""
 #. module: omna
 #: model:ir.model.fields,help:omna.field_omna_integration__image
 msgid "This field holds the image used as image for the product, limited to 1024x1024px."
-msgstr ""
+msgstr "Este campo contiene la imagen usada para el producto, limitada a 1024x1024 px."
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_collection__title
@@ -1873,8 +1884,8 @@ msgstr "Desautorizar"
 
 #. module: omna
 #: model_terms:ir.ui.view,arch_db:omna.omna_collection_form_view
-msgid "Uninstall Collection"
-msgstr "Desinstalar Colección"
+msgid "Uninstall"
+msgstr "Desinstalar"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_uom
@@ -1890,7 +1901,7 @@ msgstr "Biblioteca de imágenes de Unsplash"
 #: model:ir.model.fields,field_description:omna.field_omna_collection__updated_at
 #: model:ir.model.fields,field_description:omna.field_omna_task__task_updated_at
 msgid "Updated At"
-msgstr ""
+msgstr "Actualizada el"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_res_users__context_omna_get_access_token_url
@@ -1915,12 +1926,12 @@ msgstr "Uso de proveedor de autenticación externos (OAuth)"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_sale_pricelist
 msgid "Use pricelists to adapt your price per customers"
-msgstr ""
+msgstr "Usar tarifas para adaptar los precios a cada cliente"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_products_in_bills
 msgid "Use products in vendor bills"
-msgstr ""
+msgstr "Utilizar productos en las facturas de los proveedores. "
 
 #. module: omna
 #: model:ir.model,name:omna.model_res_users
@@ -1930,12 +1941,12 @@ msgstr "Usuarios"
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_product_variant
 msgid "Variants and Options"
-msgstr ""
+msgstr "Variantes y Opciones"
 
 #. module: omna
 #: selection:omna.task.notification,type:0
 msgid "Warning"
-msgstr ""
+msgstr "Advertencia"
 
 #. module: omna
 #: model:ir.model.fields,field_description:omna.field_omna_settings__group_warning_account
@@ -1967,8 +1978,8 @@ msgstr "Unidad de Medida de Peso"
 
 #. module: omna
 #: model_terms:ir.ui.view,arch_db:omna.view_sync_collections_wizard
-msgid "Wizard to import collections from OMNA."
-msgstr "Asistente para importar colecciones desde OMNA"
+msgid "Wizard to import available integrations from OMNA."
+msgstr "Asistente para importar las integraciones disponibles desde OMNA."
 
 #. module: omna
 #: model_terms:ir.ui.view,arch_db:omna.view_sync_integrations_wizard
