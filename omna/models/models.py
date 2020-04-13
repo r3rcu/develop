@@ -8,6 +8,7 @@ from odoo.tools.image import image_data_uri
 import dateutil.parser
 import werkzeug
 import pytz
+import json
 
 
 def omna_id2real_id(omna_id):
@@ -233,7 +234,9 @@ class OmnaFlow(models.Model):
     def start(self):
         for flow in self:
             self.get('flows/%s/start' % flow.omna_id, {})
-        self.env.user.notify_channel('warning', _('The task to execute the workflow have been created, please go to "System\Tasks" to check out the task status.'), _("Information"), True)
+        self.env.user.notify_channel('warning', _(
+            'The task to execute the workflow have been created, please go to "System\Tasks" to check out the task status.'),
+                                     _("Information"), True)
         return {'type': 'ir.actions.act_window_close'}
 
     def toggle_status(self):
@@ -368,6 +371,7 @@ class ProductTemplate(models.Model):
     omna_product_id = fields.Char("Product identifier in OMNA", index=True)
     integration_ids = fields.Many2many('omna.integration', 'omna_product_template_integration_rel', 'product_id',
                                        'integration_id', 'Integrations')
+    integrations_data = fields.Char('Integrations data')
     no_create_variants = fields.Boolean('Do not create variants automatically', default=True)
 
     def _create_variant_ids(self):
@@ -395,26 +399,46 @@ class ProductTemplate(models.Model):
         else:
             return super(ProductTemplate, self).create(vals_list)
 
+    @api.multi
     def write(self, vals):
-        self.ensure_one()
         if not self._context.get('synchronizing'):
-            if 'name' in vals or 'list_price' in vals or 'description' in vals or 'image' in vals:
-                data = {
-                    'name': vals['name'] if 'name' in vals else self.name,
-                    'price': vals['list_price'] if 'list_price' in vals else self.list_price,
-                    'description': vals['description'] if 'description' in vals else (self.description or '')
-                }
-                # TODO Send image as data url to OMNA when supported
-                # if 'image' in vals:
-                #     data['images'] = [image_data_uri(str(vals['image']).encode('utf-8'))]
-                response = self.post('products/%s' % self.omna_product_id, {'data': data})
-                if response.get('data').get('id'):
-                    vals['omna_product_id'] = response.get('data').get('id')
-                    return super(ProductTemplate, self).write(vals)
-                else:
-                    raise exceptions.AccessError(_("Error trying to update product in Omna's API."))
-            else:
-                return super(ProductTemplate, self).write(vals)
+            for record in self:
+                if 'name' in vals or 'list_price' in vals or 'description' in vals:
+                    data = {
+                        'name': vals['name'] if 'name' in vals else record.name,
+                        'price': vals['list_price'] if 'list_price' in vals else record.list_price,
+                        'description': vals['description'] if 'description' in vals else (record.description or '')
+                    }
+                    # TODO Send image as data url to OMNA when supported
+                    # if 'image' in vals:
+                    #     data['images'] = [image_data_uri(str(vals['image']).encode('utf-8'))]
+                    response = self.post('products/%s' % record.omna_product_id, {'data': data})
+                    if not response.get('data').get('id'):
+                        raise exceptions.AccessError(_("Error trying to update products in Omna's API."))
+
+                if 'integrations_data' in vals:
+                    old_data = json.loads(record.integrations_data)
+                    new_data = json.loads(vals['integrations_data'])
+                    if old_data != new_data:
+                        for integration in old_data:
+                            integration_new_data = False
+                            for integration_new in new_data:
+                                if integration_new['id'] == integration['id']:
+                                    integration_new_data = integration_new
+                                    break
+                            if integration_new_data and integration_new_data != integration:
+                                integration_data = {'properties': []}
+                                for field in integration_new_data['product']['properties']:
+                                    integration_data['properties'].append({'id': field['id'], 'value': field['value']})
+
+                                response = self.post(
+                                    'integrations/%s/products/%s' % (integration['id'], integration['product']['remote_product_id']),
+                                    {'data': integration_data})
+                                if not response.get('data').get('id'):
+                                    raise exceptions.AccessError(
+                                        _("Error trying to update products in Omna's API."))
+
+            return super(ProductTemplate, self).write(vals)
         else:
             return super(ProductTemplate, self).write(vals)
 
@@ -435,9 +459,11 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _name = 'product.product'
     _inherit = ['product.product', 'omna.api']
+
     omna_variant_id = fields.Char("Product Variant identifier in OMNA", index=True)
     variant_integration_ids = fields.Many2many('omna.integration', 'omna_product_integration_rel', 'product_id',
                                                'integration_id', 'Integrations')
+    variant_integrations_data = fields.Char('Integrations data')
 
     # TODO Publish variant in OMNA when supported
     # @api.model
@@ -460,29 +486,50 @@ class ProductProduct(models.Model):
     #     else:
     #         return super(ProductTemplate, self).create(vals_list)
 
+    @api.multi
     def write(self, vals):
-        self.ensure_one()
         if not self._context.get('synchronizing'):
-            if len(set(['name', 'price', 'description', 'sku', 'cost_price']).intersection(vals)):
-                data = {
-                    'name': vals['name'] if 'name' in vals else self.name,
-                    'description': vals['description'] if 'description' in vals else self.description,
-                    'price': vals['lst_price'] if 'lst_price' in vals else self.lst_price,
-                    'sku': vals['default_code'] if 'default_code' in vals else self.default_code,
-                    'cost_price': vals['standard_price'] if 'standard_price' in vals else self.standard_price
-                }
+            for record in self:
+                if len(set(['name', 'price', 'description', 'sku', 'cost_price']).intersection(vals)):
+                    data = {
+                        'name': vals['name'] if 'name' in vals else record.name,
+                        'description': vals['description'] if 'description' in vals else record.description,
+                        'price': vals['lst_price'] if 'lst_price' in vals else record.lst_price,
+                        'sku': vals['default_code'] if 'default_code' in vals else record.default_code,
+                        'cost_price': vals['standard_price'] if 'standard_price' in vals else record.standard_price
+                    }
+                    # TODO Send image as data url to OMNA when supported
+                    # if 'image' in vals:
+                    #     data['images'] = [image_data_uri(str(vals['image']).encode('utf-8'))]
+                    response = self.post('products/%s/variants/%s' % (self.omna_product_id, self.omna_variant_id),
+                                         {'data': data})
+                    if not response.get('data').get('id'):
+                        raise exceptions.AccessError(_("Error trying to update product variant in Omna's API."))
+
                 # TODO Send image as data url to OMNA when supported
-                # if 'image' in vals:
-                #     data['images'] = [image_data_uri(str(vals['image']).encode('utf-8'))]
-                response = self.post('products/%s/variants/%s' % (self.omna_product_id, self.omna_variant_id),
-                                     {'data': data})
-                if response.get('data').get('id'):
-                    vals['omna_variant_id'] = response.get('data').get('id')
-                    return super(ProductProduct, self).write(vals)
-                else:
-                    raise exceptions.AccessError(_("Error trying to update product variant in Omna's API."))
-            else:
-                return super(ProductProduct, self).write(vals)
+                # if 'variant_integrations_data' in vals:
+                #     old_data = json.loads(record.variant_integrations_data)
+                #     new_data = json.loads(vals['variant_integrations_data'])
+                #     if old_data != new_data:
+                #         for integration in old_data:
+                #             integration_new_data = False
+                #             for integration_new in new_data:
+                #                 if integration_new['id'] == integration['id']:
+                #                     integration_new_data = integration_new
+                #                     break
+                #             if integration_new_data and integration_new_data != integration:
+                #                 integration_data = {'properties': []}
+                #                 for field in integration_new_data['variant']['properties']:
+                #                     integration_data['properties'].append({'id': field['id'], 'value': field['value']})
+                #
+                #                 response = self.post(
+                #                     'integrations/%s/products/%s' % (integration['id'], integration['variant']['remote_product_id']),
+                #                     {'data': integration_data})
+                #                 if not response.get('data').get('id'):
+                #                     raise exceptions.AccessError(
+                #                         _("Error trying to update products in Omna's API."))
+
+            return super(ProductProduct, self).write(vals)
         else:
             return super(ProductProduct, self).write(vals)
 
@@ -710,20 +757,25 @@ class OmnaCollection(models.Model):
     omna_id = fields.Char('OMNA Collection id', readonly=True)
     shared_version = fields.Char('Shared Version', readonly=True)
     summary = fields.Text('Summary', readonly=True)
-    state = fields.Selection([('not_installed', 'Not Installed'), ('outdated', 'Outdated'), ('installed', 'Installed')], 'State', readonly=True)
+    state = fields.Selection([('not_installed', 'Not Installed'), ('outdated', 'Outdated'), ('installed', 'Installed')],
+                             'State', readonly=True)
     updated_at = fields.Datetime('Updated At', readonly=True)
     installed_at = fields.Datetime('Installed At', readonly=True)
 
     def install_collection(self):
         self.ensure_one()
         self.patch('available/integrations/%s' % self.omna_id, {})
-        self.env.user.notify_channel('warning', _('The task to install the collection have been created, please go to "System\Tasks" to check out the task status.'), _("Information"), True)
+        self.env.user.notify_channel('warning', _(
+            'The task to install the collection have been created, please go to "System\Tasks" to check out the task status.'),
+                                     _("Information"), True)
         return {'type': 'ir.actions.act_window_close'}
 
     def uninstall_collection(self):
         self.ensure_one()
         self.delete('available/integrations/%s' % self.omna_id, {})
-        self.env.user.notify_channel('warning', _('The task to uninstall the collection have been created, please go to "System\Tasks" to check out the task status.'), _("Information"), True)
+        self.env.user.notify_channel('warning', _(
+            'The task to uninstall the collection have been created, please go to "System\Tasks" to check out the task status.'),
+                                     _("Information"), True)
         return {'type': 'ir.actions.act_window_close'}
 
 

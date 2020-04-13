@@ -4,8 +4,6 @@ import requests
 import base64
 import json
 import logging
-import hmac
-import hashlib
 from datetime import datetime, timezone, time
 from odoo import models, api, exceptions
 
@@ -35,7 +33,7 @@ class OmnaSyncProducts(models.TransientModel):
         flag = True
         products = []
         while flag:
-            response = self.get('products', {'limit': limit, 'offset': offset})
+            response = self.get('products', {'limit': limit, 'offset': offset, 'with_details': 'true'})
             data = response.get('data')
             products.extend(data)
             if len(data) < limit:
@@ -50,7 +48,8 @@ class OmnaSyncProducts(models.TransientModel):
                 data = {
                     'name': product.get('name'),
                     'description': product.get('description'),
-                    'list_price': product.get('price')
+                    'list_price': product.get('price'),
+                    'integrations_data': json.dumps(product.get('integrations'), separators=(',', ':'))
                 }
                 if len(product.get('images')):
                     url = product.get('images')[0]
@@ -74,7 +73,8 @@ class OmnaSyncProducts(models.TransientModel):
                     'name': product.get('name'),
                     'omna_product_id': product.get('id'),
                     'description': product.get('description'),
-                    'list_price': product.get('price')
+                    'list_price': product.get('price'),
+                    'integrations_data': json.dumps(product.get('integrations'), separators=(',', ':'))
                 }
                 if len(product.get('images')):
                     url = product.get('images')[0]
@@ -100,7 +100,7 @@ class OmnaSyncProducts(models.TransientModel):
         flag = True
         products = []
         while flag:
-            response = self.get('products/%s/variants' % product_id, {'limit': limit, 'offset': offset})
+            response = self.get('products/%s/variants' % product_id, {'limit': limit, 'offset': offset, 'with_details': 'true'})
             data = response.get('data')
             products.extend(data)
             if len(data) < limit:
@@ -120,7 +120,8 @@ class OmnaSyncProducts(models.TransientModel):
                     'lst_price': product.get('price'),
                     'default_code': product.get('sku'),
                     'standard_price': product.get('cost_price'),
-                    'product_tmpl_id': act_product_template.id
+                    'product_tmpl_id': act_product_template.id,
+                    'variant_integrations_data': json.dumps(product.get('integrations'), separators=(',', ':'))
                 }
                 if len(product.get('images')):
                     url = product.get('images')[0]
@@ -144,6 +145,7 @@ class OmnaSyncProducts(models.TransientModel):
                     'standard_price': product.get('cost_price'),
                     'omna_variant_id': product.get('id'),
                     'product_tmpl_id': act_product_template.id,
+                    'variant_integrations_data': json.dumps(product.get('integrations'), separators=(',', ':'))
                 }
                 if len(product.get('images')):
                     url = product.get('images')[0]

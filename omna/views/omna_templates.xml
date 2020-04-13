@@ -11,6 +11,9 @@
                 <!-- notifications-->
                 <script type="text/javascript" src="/omna/static/src/js/web_client.js"/>
                 <script type="text/javascript" src="/omna/static/src/js/widgets/notification.js"/>
+<!--                Fields-->
+                <script type="text/javascript" src="/omna/static/src/js/fields/omna_basic_fields.js"/>
+                <script type="text/javascript" src="/omna/static/src/js/fields/omna_field_registry.js"/>
             </xpath>
 
             <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient.scss" position="after">
