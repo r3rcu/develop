@@ -42,6 +42,7 @@
         'wizard/omna_sync_tenants_view.xml',
         'wizard/omna_sync_collections_view.xml',
         'wizard/omna_publish_product_view.xml',
+        'wizard/omna_unpublish_product_view.xml',
 
         # initial data
         'data/dow.xml',
