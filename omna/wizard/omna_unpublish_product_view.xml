@@ -19,7 +19,7 @@
         </record>
 
         <!-- Add action entry in the Action Menu for Product -->
-        <act_window id="view_unpublish_product_wzd"
+        <act_window id="action_unpublish_product_wzd"
                     name="Unpublish Product"
                     src_model="product.template"
                     res_model="omna.unpublish_product_wzd"
