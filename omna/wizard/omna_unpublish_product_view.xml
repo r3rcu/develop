@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <record id="view_unpublish_product_wzd" model="ir.ui.view">
             <field name="name">omna.unpublish.product.wzd.form</field>
             <field name="model">omna.unpublish_product_wzd</field>
@@ -20,7 +19,7 @@
         </record>
 
         <!-- Add action entry in the Action Menu for Product -->
-        <act_window id="view_unpublish_product_wzd"
+        <act_window id="action_unpublish_product_wzd"
                     name="Unpublish Product"
                     src_model="product.template"
                     res_model="omna.unpublish_product_wzd"

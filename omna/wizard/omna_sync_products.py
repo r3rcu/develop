@@ -61,7 +61,8 @@ class OmnaSyncProducts(models.TransientModel):
                     integrations = []
                     for integration in product.get('integrations'):
                         integrations.append(integration.get('id'))
-                    data['integration_ids'] = self.env['omna.integration'].search([('integration_id', 'in', integrations)])
+                    ids = self.env['omna.integration'].search([('integration_id', 'in', integrations)]).ids
+                    data['integration_ids'] = [(6, 0, ids)]
 
                 act_product.with_context(synchronizing=True).write(data)
                 try:
@@ -86,7 +87,8 @@ class OmnaSyncProducts(models.TransientModel):
                     integrations = []
                     for integration in product.get('integrations'):
                         integrations.append(integration.get('id'))
-                    data['integration_ids'] = self.env['omna.integration'].search([('integration_id', 'in', integrations)])
+                    ids = self.env['omna.integration'].search([('integration_id', 'in', integrations)]).ids
+                    data['integration_ids'] = [(6, 0, ids)]
 
                 act_product = product_obj.with_context(synchronizing=True).create(data)
                 try:
@@ -133,7 +135,8 @@ class OmnaSyncProducts(models.TransientModel):
                     integrations = []
                     for integration in product.get('integrations'):
                         integrations.append(integration.get('id'))
-                    data['variant_integration_ids'] = self.env['omna.integration'].search([('integration_id', 'in', integrations)])
+                    ids = self.env['omna.integration'].search([('integration_id', 'in', integrations)]).ids
+                    data['variant_integration_ids'] = [(6, 0, ids)]
 
                 act_product.with_context(synchronizing=True).write(data)
             else:
@@ -157,6 +160,7 @@ class OmnaSyncProducts(models.TransientModel):
                     integrations = []
                     for integration in product.get('integrations'):
                         integrations.append(integration.get('id'))
-                    data['variant_integration_ids'] = self.env['omna.integration'].search([('integration_id', 'in', integrations)])
+                    ids = self.env['omna.integration'].search([('integration_id', 'in', integrations)]).ids
+                    data['variant_integration_ids'] = [(6, 0, ids)]
 
                 act_product = product_obj.with_context(synchronizing=True).create(data)
