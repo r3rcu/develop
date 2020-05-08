@@ -393,15 +393,58 @@ class OmnaFlow(models.Model):
 
 class OmnaIntegrationProduct(models.Model):
     _name = 'omna.integration_product'
+    _inherit = 'omna.api'
 
-    product_template_id = fields.Many2one('product.template', 'Product')
+    product_template_id = fields.Many2one('product.template', 'Product', required=True)
     integration_ids = fields.Many2many('omna.integration', 'omna_integration_integration_rel', 'integration_product_id',
-                                               'integration_id', 'OMNA Integrations')
+                                               'integration_id', 'OMNA Integrations', required=True)
     link_with_its_variants = fields.Selection([
         ('NONE', 'NONE'),
         ('SELECTED', 'SELECTED'),
         ('NEW', 'NEW'),
         ('ALL', 'ALL')], default='NONE', required=True)
+    delete_from_integration = fields.Boolean("Delete from Integration", default=False, help="Set whether the product should be removed from the remote integration source.")
+
+
+    @api.model
+    def create(self, vals_list):
+        res =  super(OmnaIntegrationProduct, self).create(vals_list)
+        try:
+            integrations = [integration.integration_id for integration in res.integration_ids]
+            data = {
+                'data': {
+                    'integration_ids': integrations,
+                    'link_with_its_variants': res.link_with_its_variants
+                }
+            }
+            self.put('products/%s' % res.product_template_id.omna_product_id, data)
+            return res
+        except Exception:
+            raise exceptions.AccessError(_("Error trying to update products in Omna's API."))
+
+
+    # @api.multi
+    # def write(self, vals):
+    #     return super(OmnaIntegrationProduct, self).write(vals)
+
+
+    @api.multi
+    def unlink(self):
+        try:
+            for intg_product in self:
+                integrations = [integration.integration_id for integration in intg_product.integration_ids]
+                data = {
+                    'data': {
+                        'integration_ids': integrations,
+                        'delete_from_integration': intg_product.delete_from_integration
+                    }
+                }
+                self.patch('products/%s' % intg_product.product_template_id.omna_product_id, data)
+        except Exception:
+            raise exceptions.AccessError(_("Error trying to update products in Omna's API."))
+
+        return super(OmnaIntegrationProduct, self).unlink()
+
 
 
 class ProductTemplate(models.Model):
