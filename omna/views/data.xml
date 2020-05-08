@@ -62,7 +62,7 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook[1]" position="after">
-                    <field name="integration_ids" invisible="1"/>
+
                     <field nolabel="1" name="integrations_data" widget="omna_integrations" style="width: 100%;"
                            required="1" attrs="{'invisible': [('is_product_variant', '=', True)]}"/>
                 </xpath>
@@ -71,6 +71,24 @@
                         <field name="no_create_variants"/>
                         <label for="no_create_variants"/>
                     </div>
+                </xpath>
+
+                <xpath expr="//page[@name='general_information']" position="after">
+                    <page name="integration" string="Link a Product">
+                        <field name="integration_ids" widget="one2many">
+                            <tree string="Integration">
+                                <field name="product_template_id" domain="[('product_tmpl_id', '=', active_id)]"/>
+                                <field name="integration_ids" widget="many2many_tags"/>
+                                <field name="link_with_its_variants"/>
+                            </tree>
+                        </field>
+
+                        <p class="oe_grey">
+                            <strong>Warning</strong>: adding or deleting attributes
+                            will delete and recreate existing variants and lead
+                            to the loss of their possible customizations.
+                        </p>
+                    </page>
                 </xpath>
             </field>
         </record>
