@@ -440,10 +440,12 @@ class OmnaIntegrationProduct(models.Model):
                     }
                 }
                 self.patch('products/%s' % intg_product.product_template_id.omna_product_id, data)
+
+            return super(OmnaIntegrationProduct, self).unlink()
         except Exception:
             raise exceptions.AccessError(_("Error trying to update products in Omna's API."))
 
-        return super(OmnaIntegrationProduct, self).unlink()
+
 
 
 
